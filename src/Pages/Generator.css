@@ -1,6 +1,9 @@
 .generator-container {
     display: flex;
     justify-content: flex-end;
+    height: 90vh;
+    margin: 0 auto;
+    padding: 10px
 }
 
 form {
@@ -8,7 +11,6 @@ form {
     flex-direction:row;
     position: fixed;
     bottom:5%;
-    border:1px solid grey;
     border-radius: 50px;
     padding:1px;
     width: 90%;
@@ -25,6 +27,7 @@ form {
     border-radius: 50px;
     font-size: medium;
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    background-color: #eaeaea;
 }
 
 input:focus {
@@ -35,17 +38,28 @@ button {
     border-radius: 100px;
 }
 
-ul {
+.chatbox {
+    flex: 1;
+    overflow-y: auto;
     display: flex;
-    flex-direction: column;      
-    list-style-type: none;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 10px;
+    text-wrap: wrap;
 }
 
-li {
+.chatbox li {
+    list-style: none;
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-    text-align: center;
-    background-color: #d3d3d3;
-    margin: 10px;
-    border-radius: 50px;
-    padding: 5px 10px;
+    width: 100%;
+    padding: 10px;
+    background-color: #eaeaea;
+    border-radius: 10px;
+    max-width: 50%;
+    align-self: flex-end;
+    margin-top: 5px;
+    word-wrap: break-word;
+    white-space: normal;
 }
