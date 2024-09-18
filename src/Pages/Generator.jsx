@@ -9,7 +9,10 @@ export default function Generator() {
     }
     return (
         <div className="generator-container">
-            <input type="text" value={input} onChange={handleChange} className="input-box" />
+            <form>
+                <input type="text" value={input} onChange={handleChange} className="input-box" />
+                    <button>Go</button>
+            </form>
         </div>
     )
 }
