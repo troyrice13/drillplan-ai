@@ -4,7 +4,8 @@ import './Generator.css'
 export default function Generator() {
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState([
-        {sender: 'user', text:'hello'}
+        {sender: 'user', text:'hello'},
+        {sender: 'ai', text:'hello'}
     ])
 
     const handleChange = (e) => {
@@ -25,9 +26,9 @@ export default function Generator() {
         <div className="generator-container">
                 <ul className="chatbox">
                     {messages.map((message, index) => (
-                        <li key={index} className="message.sender">
-                            {message.text}
-                        </li>
+                         <li key={index} className={message.sender === 'user' ? 'user-message' : 'ai-message'}>
+                         {message.text}
+                     </li>
                     ))}
                 </ul>
             <form onSubmit={handleSubmit}>
