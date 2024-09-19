@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 70vh;
+    height: 80vh;
 }
 
 .login {
@@ -10,34 +10,69 @@
     flex-direction: column;
     align-items: center;
     box-shadow: 10px;
-    width: 300px;
-    height: 350px;
+    width: 350px;
+    height: 500px;
     border-radius: 10px;
-    background-color: lightblue;
+    background-color: #213547;
+    padding: 20px 20px 0 20px;
+    justify-content: space-between; /* Space out elements evenly */
 }
 
 .login-title {
     text-align: center;
-    padding-top: 10px;
+    color: whitesmoke;
+    margin-bottom: 20px; /* Add margin below title */
 }
 
 .login-form {
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex-grow: 1; /* Allow the form to take up space */
+    justify-content: center; /* Center the form vertically */
+    width: 100%;
 }
 
 .login-form input {
-    width: auto;
+    width: 80%; /* Adjusted width */
     height: auto;
     border: none;
     padding: 10px;
-    flex-grow: 2;
     border-radius: 10px;
     font-size: medium;
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    margin-bottom: 20px; /* Space between inputs */
 }
 
 .username {
-    margin: 30px;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.login-btn {
+    background-color: #4A6678;
+    color: white;
+    margin-top: 20px;
+    border-radius: 10px;
+    width: 80%;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: space-between; /* Space between the buttons */
+    width: 80%; /* Set the width of the button container */
+    padding-bottom: 20px; /* Space between buttons and bottom */
+}
+
+.signup-btn, .forgot-password {
+    background-color: transparent; /* Removes the background */
+    border: none;                  /* Removes the border */
+    cursor: pointer;               /* Changes cursor to pointer */
+    padding: 0;                    /* Removes default padding */
+    font: inherit;                 /* Inherits the parent font styling */
+    text-decoration: underline;
+    color: whitesmoke;
+    font-size: small;              /* Make text smaller */
 }
