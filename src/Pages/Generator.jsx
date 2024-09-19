@@ -78,7 +78,7 @@ export default function Generator() {
                 ))}
                 {loading && <li className="ai-message">AI is thinking...</li>}
             </ul>
-            <form onSubmit={handleSubmit}>
+            <form className="generator-form"onSubmit={handleSubmit}>
                 <input 
                     type="text" 
                     value={input} 

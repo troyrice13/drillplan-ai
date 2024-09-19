@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import './Home.css'
+import Login from "../components/Login";
 
 export default function Home(){
     return (
-        <h1 className="title">DrillPlan.io</h1>
+        <div>
+            <Login />
+        </div>
     )
 }
