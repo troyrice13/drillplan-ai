@@ -61,7 +61,7 @@
 
 .btn-container {
     display: flex;
-    justify-content: space-between; /* Space between the buttons */
+    justify-content: center; /* Space between the buttons */
     width: 80%; /* Set the width of the button container */
     padding-bottom: 20px; /* Space between buttons and bottom */
 }

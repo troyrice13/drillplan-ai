@@ -19,3 +19,7 @@
 .header-title {
     margin: 0
 }
+
+.header-title:hover {
+    cursor: pointer;
+}
