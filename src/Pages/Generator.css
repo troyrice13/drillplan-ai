@@ -36,7 +36,7 @@ input:focus {
     outline: none;
 }
 
-button {
+form button {
     border-radius: 100px;
     margin-left: 5px;
 }
