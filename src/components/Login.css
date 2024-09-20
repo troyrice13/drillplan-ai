@@ -3,25 +3,26 @@
     justify-content: center;
     align-items: center;
     height: 80vh;
+    background-color: var(--bg-dark);
 }
 
 .login {
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slight shadow for depth */
     width: 350px;
     height: 500px;
     border-radius: 10px;
-    background-color: #213547;
+    background-color: var(--bg-dark);
     padding: 20px 20px 0 20px;
     justify-content: space-between; /* Space out elements evenly */
 }
 
 .login-title {
     text-align: center;
-    color: whitesmoke;
-    margin-bottom: 20px; /* Add margin below title */
+    color: var(--text-dark);
+    margin-bottom: 10px; /* Add margin below title */
 }
 
 .login-form {
@@ -42,16 +43,13 @@
     font-size: medium;
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     margin-bottom: 20px; /* Space between inputs */
-}
-
-.username {
-    margin-left: 30px;
-    margin-right: 30px;
+    background-color: #2E3B4A; /* Slightly lighter shade than background */
+    color: var(--text-dark); /* Text color for inputs */
 }
 
 .login-btn {
-    background-color: #4A6678;
-    color: white;
+    background-color: var(--button-bg-dark);
+    color: var(--text-dark);
     margin-top: 20px;
     border-radius: 10px;
     width: 80%;
@@ -64,15 +62,53 @@
     justify-content: center; /* Space between the buttons */
     width: 80%; /* Set the width of the button container */
     padding-bottom: 20px; /* Space between buttons and bottom */
+    flex-direction: column;
+    
 }
 
 .signup-btn, .forgot-password {
-    background-color: transparent; /* Removes the background */
-    border: none;                  /* Removes the border */
-    cursor: pointer;               /* Changes cursor to pointer */
-    padding: 0;                    /* Removes default padding */
-    font: inherit;                 /* Inherits the parent font styling */
-    text-decoration: underline;
-    color: whitesmoke;
-    font-size: small;              /* Make text smaller */
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font: inherit;
+    color: var(--text-dark);
+    font-size: small;
+}
+
+.forgot-password {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font: inherit;
+    color: var(--text-dark);
+    font-size: small;
+    margin-bottom: 20px;
+    margin-top: -20px;
+}
+
+.signup-btn:hover, .forgot-password:hover {
+    background-color: transparent;
+}
+.signup-btn:focus, .forgot-password:focus {
+    outline: none;
+}
+@media (prefers-color-scheme: light) {
+  .login-container {
+    background-color: var(--bg-light);
+  }
+  .login {
+    background-color: var(--bg-light);
+  }
+  .login-title,
+  .login-form input,
+  .login-btn,
+  .signup-btn,
+  .forgot-password {
+    color: var(--text-light);
+  }
+  .login-form input {
+    background-color: #ffffff; /* White input field for light mode */
+  }
 }

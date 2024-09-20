@@ -5,21 +5,40 @@
     padding: 15px;
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     margin-bottom: 10px;
+    color: var(--text-dark);
 }
 
 .profile-btn {
-   margin-left: auto;
-    background-color: white;
+    margin-left: auto;
+    background-color: transparent;
+    color: var(--text-dark);
+    padding: 0;
 }
 
 .profile-btn:hover {
-    border-radius: 10px;
+    background-color: transparent;
 }
 
 .header-title {
-    margin: 0
+    margin: 0;
+    color: var(--text-dark);
 }
 
 .header-title:hover {
     cursor: pointer;
+}
+@media (prefers-color-scheme: light) {
+  .header {
+    color: var(--text-light);
+  }
+  .profile-btn {
+    background-color: var(--button-bg-light);
+    color: var(--text-light);
+  }
+  .profile-btn:hover {
+    background-color: var(--button-hover-light);
+  }
+  .header-title {
+    color: var(--text-light);
+  }
 }
