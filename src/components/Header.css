@@ -5,40 +5,60 @@
     padding: 15px;
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     margin-bottom: 10px;
-    color: var(--text-dark);
+    color: var(--text-dark); /* Default to dark mode text */
+    background-color: var(--bg-dark); /* Default to dark mode background */
 }
 
-.profile-btn {
+.nav-buttons {
+    display: flex;
+    flex-direction: row;
+}
+
+.profile-btn, .login-btn, .logout-btn, .signup-btn {
     margin-left: auto;
-    background-color: transparent;
-    color: var(--text-dark);
-    padding: 0;
+    background-color: var(--button-bg-dark); /* Default to dark mode button */
+    color: var(--text-dark); /* Default to dark mode text */
+    border: 1px solid var(--button-bg-dark); /* Button border for consistency */
+    padding: 0.5em 1em;
+    border-radius: 5px;
+    transition: background-color 0.25s, border-color 0.25s;
 }
 
-.profile-btn:hover {
-    background-color: transparent;
+.profile-btn:hover, 
+.logout-btn:hover, 
+.login-btn:hover, 
+.signup-btn:hover {
+    background-color: var(--button-hover-dark); /* Dark mode hover effect */
+    border-color: var(--button-hover-dark); /* Button border hover effect */
 }
 
 .header-title {
     margin: 0;
-    color: var(--text-dark);
+    color: var(--text-dark); /* Default to dark mode text */
 }
 
 .header-title:hover {
     cursor: pointer;
 }
+
 @media (prefers-color-scheme: light) {
   .header {
-    color: var(--text-light);
+    color: var(--text-light); /* Light mode text */
+    background-color: var(--bg-light); /* Light mode background */
   }
-  .profile-btn {
-    background-color: var(--button-bg-light);
-    color: var(--text-light);
+  .profile-btn, .login-btn, .logout-btn, .signup-btn {
+    background-color: var(--button-bg-light); /* Light mode button */
+    color: var(--text-light); /* Light mode text */
+    border-color: var(--button-bg-light); /* Light mode button border */
   }
-  .profile-btn:hover {
-    background-color: var(--button-hover-light);
+  .profile-btn:hover, 
+  .logout-btn:hover, 
+  .login-btn:hover, 
+  .signup-btn:hover {
+    background-color: var(--button-hover-light); /* Light mode hover */
+    border-color: var(--button-hover-light); /* Light mode border hover */
   }
   .header-title {
-    color: var(--text-light);
+    color: var(--text-light); /* Light mode text */
   }
 }

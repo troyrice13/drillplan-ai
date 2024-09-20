@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import axios from 'axios'; // Import axios for API requests
+import axios from 'axios';
 import './Generator.css';
 
 export default function Generator() {
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState([
-        { role: 'system', content: 'How can I assist you today?' }
+        { role: 'system', content: 'Welcome! Let’s create your custom workout routine. First, could you tell me your fitness goals (e.g., building muscle, losing weight, improving endurance)?' }
     ]);
     const [loading, setLoading] = useState(false);
 
@@ -13,7 +13,6 @@ export default function Generator() {
     const handleChange = (e) => {
         setInput(e.target.value);
     };
-    
 
     // Function to call GPT API
     const getAIResponse = async (userMessage) => {
@@ -39,7 +38,6 @@ export default function Generator() {
                 }
             );
             const aiText = response.data.choices[0].message.content;
-            console.log(aiText);
             return aiText; // Return plain string
         } catch (error) {
             console.error("Error fetching AI response:", error);
@@ -78,15 +76,16 @@ export default function Generator() {
                 ))}
                 {loading && <li className="ai-message">AI is thinking...</li>}
             </ul>
-            <form className="generator-form"onSubmit={handleSubmit}>
+            <form className="generator-form" onSubmit={handleSubmit}>
                 <input 
                     type="text" 
                     value={input} 
                     onChange={handleChange} 
                     className="input-box" 
                     placeholder="Type your message..."
+                    disabled={loading} // Disable input while loading
                 />
-                <button type="submit" disabled={loading}>Go</button>
+                <button type="submit" disabled={loading || input.trim() === ''}>Go</button>
             </form>
         </div>
     );

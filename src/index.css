@@ -1,74 +1,53 @@
+/* index.css */
+
+/* Default Theme Variables (Light Mode) */
 :root {
+  --text-color: #213547; /* Main text color */
+  --bg-color: #FFFFFF; /* Background color */
+  --accent-color: #4A6678; /* Accent/Secondary color */
+  --button-bg-color: #E0E0E0; /* Button background */
+  --button-hover-color: #D3D3D3; /* Button hover */
+}
+
+/* Dark Theme Variables */
+body.dark-theme {
+  --text-color: #F5F5F5; /* Light text */
+  --bg-color: #213547; /* Dark background */
+  --accent-color: #FFFFFF; /* Accent/Secondary color (white in this case) */
+  --button-bg-color: #4A6678; /* Darker button background */
+  --button-hover-color: #5B7D91; /* Darker button hover */
+}
+
+/* Apply variables */
+body {
+  color: var(--text-color);
+  background-color: var(--bg-color);
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   font-weight: 400;
-
-  /* Dark Mode Colors */
-  --text-dark: #F5F5F5; /* Light text for dark mode */
-  --bg-dark: #213547; /* Dark background */
-  --link-dark: #B0C4DE; /* Link color for dark mode */
-  --button-bg-dark: #4A6678; /* Button background for dark mode */
-  --button-hover-dark: #5B7D91; /* Button hover effect for dark mode */
-
-  /* Light Mode Colors */
-  --text-light: #213547; /* Dark text for light mode */
-  --bg-light: #F7F7F7; /* Light background */
-  --link-light: #4A6678; /* Link color for light mode */
-  --button-bg-light: #E0E0E0; /* Button background for light mode */
-  --button-hover-light: #D3D3D3; /* Button hover effect for light mode */
-
-  color-scheme: light dark;
-  color: var(--text-dark); /* Default to dark mode text */
-  background-color: var(--bg-dark); /* Default to dark mode background */
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
 }
 
 a {
-  font-weight: 500;
-  color: var(--link-dark);
-  text-decoration: inherit;
-}
-a:hover {
-  color: #C0D1F4; /* Slightly lighter shade for hover */
+  color: var(--accent-color);
+  text-decoration: none;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+a:hover {
+  opacity: 0.8; /* Slight opacity change on hover */
 }
 
 button {
+  background-color: var(--button-bg-color);
+  color: var(--text-color);
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
-  font-family: inherit;
-  background-color: var(--button-bg-dark);
+  border-radius: 5px;
   cursor: pointer;
-  transition: border-color 0.25s, background-color 0.25s;
-}
-button:hover {
-  background-color: var(--button-hover-dark);
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  transition: background-color 0.25s, color 0.25s;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: var(--text-light);
-    background-color: var(--bg-light);
-  }
-  a:hover {
-    color: #4A6678;
-  }
-  button {
-    background-color: var(--button-bg-light);
-  }
-  button:hover {
-    background-color: var(--button-hover-light);
-  }
+button:hover {
+  background-color: var(--button-hover-color);
 }
