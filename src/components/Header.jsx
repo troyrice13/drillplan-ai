@@ -35,6 +35,7 @@ const toggleTheme = () => {
             <div className="nav-buttons">
                 {isLoggedIn ? (
                 <>
+                    <button className="generator-btn" onClick={() => navigate('/generator')}>Drill.ai</button>
                     <button className="profile-btn" onClick={() => navigate('/profile')}>Profile</button>
                     <button className="logout-btn" onClick={handleLogout}>Logout</button>
                 </>

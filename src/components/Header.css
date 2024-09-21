@@ -1,64 +1,66 @@
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-    margin-bottom: 10px;
-    color: var(--text-dark); /* Default to dark mode text */
-    background-color: var(--bg-dark); /* Default to dark mode background */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  height: 50px;
+  background-color: var(--bg-light);
+  color: var(--text-light);
+  transition: background-color 0.3s, color 0.3s;
 }
 
-.nav-buttons {
-    display: flex;
-    flex-direction: row;
-}
-
-.profile-btn, .login-btn, .logout-btn, .signup-btn {
-    margin-left: auto;
-    background-color: var(--button-bg-dark); /* Default to dark mode button */
-    color: var(--text-dark); /* Default to dark mode text */
-    border: 1px solid var(--button-bg-dark); /* Button border for consistency */
-    padding: 0.5em 1em;
-    border-radius: 5px;
-    transition: background-color 0.25s, border-color 0.25s;
-}
-
-.profile-btn:hover, 
-.logout-btn:hover, 
-.login-btn:hover, 
-.signup-btn:hover {
-    background-color: var(--button-hover-dark); /* Dark mode hover effect */
-    border-color: var(--button-hover-dark); /* Button border hover effect */
+body.dark-theme .header {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
 }
 
 .header-title {
-    margin: 0;
-    color: var(--text-dark); /* Default to dark mode text */
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: inherit;
 }
 
 .header-title:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
-@media (prefers-color-scheme: light) {
-  .header {
-    color: var(--text-light); /* Light mode text */
-    background-color: var(--bg-light); /* Light mode background */
-  }
-  .profile-btn, .login-btn, .logout-btn, .signup-btn {
-    background-color: var(--button-bg-light); /* Light mode button */
-    color: var(--text-light); /* Light mode text */
-    border-color: var(--button-bg-light); /* Light mode button border */
-  }
-  .profile-btn:hover, 
-  .logout-btn:hover, 
-  .login-btn:hover, 
-  .signup-btn:hover {
-    background-color: var(--button-hover-light); /* Light mode hover */
-    border-color: var(--button-hover-light); /* Light mode border hover */
-  }
-  .header-title {
-    color: var(--text-light); /* Light mode text */
-  }
+.nav-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.nav-buttons button {
+  height: 36px;
+  padding: 0 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: var(--button-bg-light);
+  color: var(--text-light);
+  transition: background-color 0.25s, color 0.25s;
+}
+
+.nav-buttons button:hover {
+  background-color: var(--button-hover-light);
+}
+
+body.dark-theme .nav-buttons button {
+  background-color: var(--button-bg-dark);
+  color: var(--text-dark);
+}
+
+body.dark-theme .nav-buttons button:hover {
+  background-color: var(--button-hover-dark);
+}
+
+.theme-toggle-btn {
+  background-color: transparent !important;
+  color: inherit !important;
+  border: 1px solid currentColor !important;
+}
+
+.theme-toggle-btn:hover {
+  opacity: 0.8;
 }
