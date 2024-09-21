@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/auth');
 const protectedRoutes = require('./routes/protectedRoutes');
+const profileRoutes = require('./routes/profile'); // Add this line
 
 // Load environment variables from .env file
 dotenv.config();
@@ -26,6 +27,7 @@ mongoose.connect(process.env.MONGO_URI, {
 // Routes
 app.use('/api/auth', authRoutes); // Registration and login routes
 app.use('/api/protected', protectedRoutes); // Protected routes that require authentication
+app.use('/api/profile', profileRoutes); // Add this line for profile routes
 
 // Base route
 app.get('/', (req, res) => {

@@ -5,6 +5,7 @@ import { Routes, Route } from 'react-router-dom';
 import Generator from './Pages/Generator';
 import Header from './components/Header';
 import Login from './Pages/Login';
+import Profile from './Pages/Profile';
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
       <Route path='/' element={<Home />} />
       <Route path='/generator' element={<Generator />} />
       <Route path='/login' element={<Login />} />
+      <Route path='/profile' element={<Profile />} />
     </Routes>
     </>
   )
