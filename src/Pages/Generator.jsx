@@ -1,28 +1,65 @@
 import React, { useState } from "react";
 import axios from 'axios';
+import ReactMarkdown from 'react-markdown';
 import './Generator.css';
 
 export default function Generator() {
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState([
-        { role: 'system', content: 'Welcome! Let’s create your custom workout routine. First, could you tell me your fitness goals (e.g., building muscle, losing weight, improving endurance)?' }
+        { role: 'system', content: "Welcome! Let's create your custom workout routine. First, could you tell me your fitness goals (e.g., building muscle, losing weight, improving endurance)?" }
     ]);
     const [loading, setLoading] = useState(false);
 
-    // Handle user input
     const handleChange = (e) => {
         setInput(e.target.value);
     };
 
-    // Function to call GPT API
+    const formatAIResponse = (response) => {
+        const lines = response.split('\n');
+        let formattedResponse = '';
+        let inList = false;
+    
+        lines.forEach(line => {
+            line = line.trim();
+            if (line.startsWith('#')) {
+                // Headers
+                const headerLevel = line.split('#').length - 1;
+                formattedResponse += `${'#'.repeat(headerLevel)} ${line.replace(/#/g, '').trim()}\n`;
+            } else if (line.match(/^\d+\.\s+.+$/)) {
+                // Numbered exercise items
+                if (!inList) {
+                    formattedResponse += '\n';
+                    inList = true;
+                }
+                formattedResponse += `${line}\n`;
+            } else if (line.startsWith('-') || line.startsWith('○')) {
+                // List items (using both '-' and '○' as potential list item markers)
+                if (!inList) {
+                    formattedResponse += '\n';
+                    inList = true;
+                }
+                formattedResponse += `${line}\n`;
+            } else if (line !== '') {
+                // Regular text (non-empty lines only)
+                if (inList) {
+                    formattedResponse += '\n';
+                    inList = false;
+                }
+                formattedResponse += `${line}\n`;
+            }
+        });
+    
+        return formattedResponse.trim();
+    };
+
     const getAIResponse = async (userMessage) => {
-        setLoading(true); // Show loading state
-        const apiKey = import.meta.env.VITE_OPENAI_API_KEY; // Ensure you use Vite's env variable format
+        setLoading(true);
+        const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
         try {
             const response = await axios.post(
                 'https://api.openai.com/v1/chat/completions',
                 {
-                    model: "gpt-4o-mini", // Choose your model
+                    model: "gpt-4o-mini",
                     max_tokens: 3000,
                     temperature: 1,
                     messages: [
@@ -38,31 +75,26 @@ export default function Generator() {
                 }
             );
             const aiText = response.data.choices[0].message.content;
-            return aiText; // Return plain string
+            return formatAIResponse(aiText);
         } catch (error) {
             console.error("Error fetching AI response:", error);
             return "Sorry, I couldn't generate a response at this moment.";
         } finally {
-            setLoading(false); // Remove loading state
+            setLoading(false);
         }
     };
 
-    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (input.trim()) {
-            // Add user message to the chat
             setMessages([...messages, { role: 'user', content: input }]);
-
-            // Call the AI and add the AI's response to the chat
             const aiResponse = await getAIResponse(input);
             setMessages(prevMessages => [
                 ...prevMessages,
-                { role: 'assistant', content: aiResponse } // Content should be plain string
+                { role: 'assistant', content: aiResponse }
             ]);
-
-            setInput(''); // Clear the input field
+            setInput('');
         }
     };
 
@@ -71,7 +103,11 @@ export default function Generator() {
             <ul className="chatbox">
                 {messages.map((message, index) => (
                     <li key={index} className={message.role === 'user' ? 'user-message' : 'ai-message'}>
-                        {message.content}
+                        {message.role === 'assistant' ? (
+                            <ReactMarkdown>{message.content}</ReactMarkdown>
+                        ) : (
+                            message.content
+                        )}
                     </li>
                 ))}
                 {loading && <li className="ai-message">AI is thinking...</li>}
@@ -83,7 +119,7 @@ export default function Generator() {
                     onChange={handleChange} 
                     className="input-box" 
                     placeholder="Type your message..."
-                    disabled={loading} // Disable input while loading
+                    disabled={loading}
                 />
                 <button type="submit" disabled={loading || input.trim() === ''}>Go</button>
             </form>

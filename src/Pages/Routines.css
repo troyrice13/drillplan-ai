@@ -1,0 +1,85 @@
+.routines-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.routines-container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.routine-card {
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.routine-card h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.routine-card ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.routine-card li {
+    margin-bottom: 10px;
+}
+
+.routine-card button {
+    margin-right: 10px;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.routine-card button:hover {
+    background-color: #0056b3;
+}
+
+.edit-routine-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.edit-routine-modal input {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.edit-routine-modal button {
+    margin-right: 10px;
+    padding: 8px 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.edit-routine-modal button:last-child {
+    background-color: #dc3545;
+}
+
+.edit-routine-modal button:hover {
+    opacity: 0.8;
+}
