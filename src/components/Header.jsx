@@ -4,27 +4,27 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 export default function Header() {
-const navigate = useNavigate();
-const { isLoggedIn,  logout } = useContext(AuthContext);
-const [isDarkTheme, setIsDarkTheme] = useState(false);
+    const navigate = useNavigate();
+    const { isLoggedIn, logout } = useContext(AuthContext);
+    const [isDarkTheme, setIsDarkTheme] = useState(false);
 
-const handleLogout = () => {
-    logout();
-    navigate('/');
-}
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+    }
 
-useEffect(() => {
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    setIsDarkTheme(currentTheme === 'dark');
-    document.body.classList.toggle('dark-theme', currentTheme === 'dark');
-}, []);
+    useEffect(() => {
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        setIsDarkTheme(currentTheme === 'dark');
+        document.body.classList.toggle('dark-theme', currentTheme === 'dark');
+    }, []);
 
-const toggleTheme = () => {
-    const newTheme = isDarkTheme ? 'light' : 'dark';
-    setIsDarkTheme(!isDarkTheme);
-    localStorage.setItem('theme', newTheme);
-    document.body.classList.toggle('dark-theme', newTheme === 'dark');
-};
+    const toggleTheme = () => {
+        const newTheme = isDarkTheme ? 'light' : 'dark';
+        setIsDarkTheme(!isDarkTheme);
+        localStorage.setItem('theme', newTheme);
+        document.body.classList.toggle('dark-theme', newTheme === 'dark');
+    };
 
     return (
         <nav className="header">

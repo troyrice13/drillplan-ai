@@ -1,28 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import './Login.css';
 
 export default function Login() {
-  const [isLogin, setIsLogin] = useState(true); // State to toggle between login and register
-  const [isForgotPassword, setIsForgotPassword] = useState(false); // State to show forgot password form
+  const [isLogin, setIsLogin] = useState(true);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [email, setEmail] = useState(''); // Only needed for registration and forgot password
+  const [email, setEmail] = useState('');
 
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
-  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (isForgotPassword) {
-      // Forgot Password logic
       try {
         const response = await axios.post('http://localhost:3000/api/auth/forgot-password', { email });
         if (response.status === 200) {
           alert('Password reset link sent! Check your email.');
-          setIsForgotPassword(false); // Switch to login form after sending reset link
+          setIsForgotPassword(false);
         } else {
           alert(response.data.message);
         }
@@ -31,11 +31,10 @@ export default function Login() {
         alert('An error occurred. Please try again later.');
       }
     } else if (isLogin) {
-      // Login logic
       try {
         const response = await axios.post('http://localhost:3000/api/auth/login', { username, password });
         if (response.status === 200) {
-          localStorage.setItem('token', response.data.token);
+          login(response.data.user, response.data.token); // Use the login function from AuthContext
           alert('Login successful!');
           navigate('/generator');
         } else {
@@ -46,12 +45,11 @@ export default function Login() {
         alert('An error occurred. Please try again later.');
       }
     } else {
-      // Registration logic
       try {
         const response = await axios.post('http://localhost:3000/api/auth/register', { username, password, email });
         if (response.status === 201) {
           alert('Registration successful! Please log in.');
-          setIsLogin(true); // Switch to login form after registration
+          setIsLogin(true);
         } else {
           alert(response.data.message);
         }

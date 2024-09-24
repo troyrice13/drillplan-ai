@@ -1,47 +1,35 @@
 import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
 
-// Create the context
 export const AuthContext = createContext();
 
-// Create a provider component
 export const AuthProvider = ({ children }) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
 
-    // Check for user authentication status
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            // You can also verify the token by making an API call if necessary
-            setIsLoggedIn(true);
-        }
-    }, []);
+  useEffect(() => {
+    // Check if there's a token in localStorage on initial load
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+      // Optionally fetch user data here if needed
+    }
+  }, []);
 
-    // Function to handle login
-    const login = async (username, password) => {
-        try {
-            const response = await axios.post('http://localhost:3000/api/auth/login', { username, password });
-            if (response.status === 200) {
-                localStorage.setItem('token', response.data.token);
-                setIsLoggedIn(true);
-            } else {
-                throw new Error(response.data.message);
-            }
-        } catch (error) {
-            console.error('Login error:', error);
-            alert('Login failed. Please try again.');
-        }
-    };
+  const login = (userData, token) => {
+    localStorage.setItem('token', token);
+    setIsLoggedIn(true);
+    setUser(userData);
+  };
 
-    // Function to handle logout
-    const logout = () => {
-        localStorage.removeItem('token');
-        setIsLoggedIn(false);
-    };
+  const logout = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    setUser(null);
+  };
 
-    return (
-        <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
-            {children}
-        </AuthContext.Provider>
-    );
+  return (
+    <AuthContext.Provider value={{ isLoggedIn, user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
