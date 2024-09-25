@@ -1,42 +1,65 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const mongoose = require('mongoose');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 const authRoutes = require('./routes/auth');
 const protectedRoutes = require('./routes/protectedRoutes');
 const profileRoutes = require('./routes/profile');
-const routineRoutes = require('./routes/routines')
+const routineRoutes = require('./routes/routines');
 
-// Load environment variables from .env file
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true, 
-    useUnifiedTopology: true, 
-})
-.then(() => console.log('Connected to MongoDB'))
-.catch((err) => console.error('Failed to connect to MongoDB', err));
+const uri = process.env.MONGODB_URI || "mongodb+srv://troyrice13:N2mkY25P6NxAlMmG@drillplan.7pbjz.mongodb.net/?retryWrites=true&w=majority&appName=DrillPlan";
 
-// Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/protected', protectedRoutes);
-app.use('/api/profile', profileRoutes);
-app.use('/api/routines', routineRoutes)
-
-// Base route
-app.get('/', (req, res) => {
-    res.send('Hello, this is the backend server!');
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
 });
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+async function startServer() {
+  try {
+    await client.connect();
+    console.log("Connected to MongoDB");
+
+    const database = client.db("DrillPlan"); // Make sure this matches your database name
+
+    app.use('/api/auth', authRoutes(database));
+    // Uncomment and update these as you update each route file
+    // app.use('/api/protected', protectedRoutes(database));
+    // app.use('/api/profile', profileRoutes(database));
+    // app.use('/api/routines', routineRoutes(database));
+
+    app.get('/', (req, res) => {
+      res.send('Hello, this is the backend server!');
+    });
+
+    app.get('/api/test-db', async (req, res) => {
+      try {
+        await client.db("admin").command({ ping: 1 });
+        res.json({ message: "Database connection successful!" });
+      } catch (error) {
+        console.error("Error testing database connection:", error);
+        res.status(500).json({ message: "Database connection failed", error: error.message });
+      }
+    });
+
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+
+  } catch (error) {
+    console.error('Failed to connect to the database', error);
+    process.exit(1);
+  }
+}
+
+startServer().catch(console.dir);
