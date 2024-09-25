@@ -1,5 +1,16 @@
 const mongoose = require('mongoose');
 
+const routineSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    exercises: [{
+        name: String,
+        sets: Number,
+        reps: Number,
+        weight: Number
+    }],
+    createdAt: { type: Date, default: Date.now },
+});
+
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -30,9 +41,10 @@ const userSchema = new mongoose.Schema({
     preferredWorkoutTypes: [{
         type: String,
     }],
+    routines: [routineSchema] // Embed routines here
 }, {
     timestamps: true,
-    collection: 'users'  // Explicitly specify the collection name
+    collection: 'users'
 });
 
 const User = mongoose.model('User', userSchema);

@@ -35,7 +35,7 @@ async function startServer() {
     app.use('/api/auth', authRoutes(database));
     // app.use('/api/protected', protectedRoutes(database));
     app.use('/api/profile', profileRoutes(database));
-    // app.use('/api/routines', routineRoutes(database));
+    app.use('/api/routines', routineRoutes(database));
 
     app.get('/', (req, res) => {
       res.send('Hello, this is the backend server!');
