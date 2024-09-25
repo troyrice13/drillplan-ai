@@ -1,4 +1,3 @@
-const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const { MongoClient, ServerApiVersion } = require('mongodb');
@@ -6,6 +5,7 @@ const authRoutes = require('./routes/auth');
 const protectedRoutes = require('./routes/protectedRoutes');
 const profileRoutes = require('./routes/profile');
 const routineRoutes = require('./routes/routines');
+const express = require('express');
 
 dotenv.config();
 
@@ -33,9 +33,8 @@ async function startServer() {
     const database = client.db("DrillPlan"); // Make sure this matches your database name
 
     app.use('/api/auth', authRoutes(database));
-    // Uncomment and update these as you update each route file
     // app.use('/api/protected', protectedRoutes(database));
-    // app.use('/api/profile', profileRoutes(database));
+    app.use('/api/profile', profileRoutes(database));
     // app.use('/api/routines', routineRoutes(database));
 
     app.get('/', (req, res) => {

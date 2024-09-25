@@ -1,42 +1,60 @@
+/* General Container Styling */
 .profile-container {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .profile-container form > div {
-    margin-bottom: 15px;
-  }
-  
-  .profile-container label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  .profile-container input[type="text"],
-  .profile-container input[type="email"],
-  .profile-container input[type="number"],
-  .profile-container select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .profile-container input[readonly] {
-    background-color: #f0f0f0;
-    cursor: not-allowed;
-  }
-  
-  .profile-container button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .profile-container button:hover {
-    background-color: #0056b3;
-  }
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Title Styling */
+.profile-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Profile Details Styling */
+.profile-details p {
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 10px 0;
+}
+
+/* Error and Loading Messages */
+.error-message, .loading-message {
+  text-align: center;
+  color: #ff0000;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+/* Form Elements - For Future Usage */
+.profile-container label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.profile-container input[type="text"],
+.profile-container input[type="email"],
+.profile-container input[type="number"],
+.profile-container select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+
+/* Button Styling */
+.profile-container button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.profile-container button:hover {
+  background-color: #0056b3;
+}

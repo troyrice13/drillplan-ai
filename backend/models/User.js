@@ -15,7 +15,6 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    // New fields
     height: {
         type: Number,
         min: 0,
@@ -32,7 +31,10 @@ const userSchema = new mongoose.Schema({
         type: String,
     }],
 }, {
-    timestamps: true // Adds createdAt and updatedAt fields
+    timestamps: true,
+    collection: 'users'  // Explicitly specify the collection name
 });
 
-module.exports = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;

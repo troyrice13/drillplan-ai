@@ -1,33 +1,40 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
-const auth = require('../middleware/auth'); // Assuming you have an auth middleware
+const authenticateToken = require('../middleware/auth');
+const { ObjectId } = require('mongodb'); // Import ObjectId correctly from mongodb
 
-router.put('/profile', auth, async (req, res) => {
-    try {
-        const { height, weight, fitnessGoal, preferredWorkoutTypes } = req.body;
+module.exports = function(database) {
+    router.get('/', authenticateToken, async (req, res) => {
+        try {
+            console.log('Attempting to find user with ID:', req.user.userId);
 
-        // Find the user by id (assuming the auth middleware adds user id to req)
-        let user = await User.findById(req.user.id);
+            // Use new ObjectId(...) to create a valid ObjectId instance
+            const user = await database.collection('users').findOne(
+                { _id: new ObjectId(req.user.userId) },
+                { projection: { password: 0 } } // Exclude password field
+            );
 
-        if (!user) {
-            return res.status(404).json({ msg: 'User not found' });
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            res.json(user);
+        } catch (error) {
+            console.error('Detailed error in profile route:', error);
+            if (error.name === 'MongoNetworkError') {
+                res.status(503).json({ 
+                    message: 'Database operation timed out. Please try again.',
+                    details: error.message
+                });
+            } else {
+                res.status(500).json({ 
+                    message: 'An unexpected error occurred', 
+                    error: error.message,
+                    stack: error.stack
+                });
+            }
         }
+    });
 
-        // Update fields
-        if (height) user.height = height;
-        if (weight) user.weight = weight;
-        if (fitnessGoal) user.fitnessGoal = fitnessGoal;
-        if (preferredWorkoutTypes) user.preferredWorkoutTypes = preferredWorkoutTypes;
-
-        // Save the updated user
-        await user.save();
-
-        res.json(user);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server Error');
-    }
-});
-
-module.exports = router;
+    return router;
+};
