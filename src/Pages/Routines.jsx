@@ -243,7 +243,7 @@ export default function Routines() {
                                     <h2>{routine.name}</h2>
                                     <ul>
                                         {routine.exercises.map((exercise, index) => (
-                                            <li key={index}>{exercise.name}: {exercise.sets} sets, {exercise.reps} reps</li>
+                                            <li key={`${routine._id}-${index}`}>{exercise.name}: {exercise.sets} sets, {exercise.reps} reps</li>
                                         ))}
                                     </ul>
                                     <div className="button-group">

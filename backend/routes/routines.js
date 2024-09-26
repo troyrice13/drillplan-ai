@@ -42,36 +42,49 @@ module.exports = function(database) {
             const routineId = new ObjectId(req.params.routineId);
             const userId = new ObjectId(req.user.userId);
     
-            // First, check if the routine exists and belongs to the user
+            // Log the incoming data for debugging
+            console.log('Updating routine with ID:', routineId);
+            console.log('Authenticated user ID:', userId);
+            console.log('Update data received:', req.body);
+    
+            // Check if the routine exists and belongs to the user
             const existingRoutine = await database.collection('routines').findOne({
                 _id: routineId,
                 userId: userId
             });
     
             if (!existingRoutine) {
+                console.log('Routine not found or not authorized.');
                 return res.status(404).json({ message: 'Routine not found or not authorized' });
             }
     
-            // Remove _id and userId from the update data
-            const { _id, userId: _, ...updateData } = req.body;
+            // Remove _id, userId, and createdAt from the update data if not needed
+            const { _id, userId: _, createdAt, ...updateData } = req.body;
     
-            // Update the routine
-            const result = await database.collection('routines').findOneAndUpdate(
+            // Log the data to be updated in the database for clarity
+            console.log('Data to update in DB:', updateData);
+    
+            // Update the routine in the database and use modifiedCount to verify the update
+            const result = await database.collection('routines').updateOne(
                 { _id: routineId, userId: userId },
-                { $set: { ...updateData, updatedAt: new Date() } },
-                { returnDocument: 'after' }
+                { $set: { ...updateData, updatedAt: new Date() } }
             );
     
-            if (!result.value) {
+            if (result.modifiedCount === 0) {
+                console.log('Routine update failed, no document found or modified.');
                 return res.status(500).json({ message: 'Failed to update routine' });
             }
     
-            res.json(result.value);
+            console.log('Routine updated successfully:', result);
+            // Send a success response
+            res.json({ message: 'Routine updated successfully', ...updateData });
         } catch (error) {
             console.error('Error updating routine:', error);
             res.status(500).json({ message: 'Error updating routine', error: error.message });
         }
     });
+    
+    
     
 
     // Delete a routine
