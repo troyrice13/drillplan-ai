@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const authenticateToken = require('../middleware/auth');
 const { ObjectId } = require('mongodb');
+const authenticateToken = require('../middleware/auth');
 
 module.exports = function(database) {
     // Create a new routine
@@ -39,23 +39,40 @@ module.exports = function(database) {
     // Update a routine
     router.put('/:routineId', authenticateToken, async (req, res) => {
         try {
-            const { name, exercises } = req.body;
-            const result = await database.collection('routines').findOneAndUpdate(
-                { _id: new ObjectId(req.params.routineId), userId: new ObjectId(req.user.userId) },
-                { $set: { name, exercises, updatedAt: new Date() } },
-                { returnDocument: 'after' }
-            );
-
-            if (!result.value) {
+            const routineId = new ObjectId(req.params.routineId);
+            const userId = new ObjectId(req.user.userId);
+    
+            // First, check if the routine exists and belongs to the user
+            const existingRoutine = await database.collection('routines').findOne({
+                _id: routineId,
+                userId: userId
+            });
+    
+            if (!existingRoutine) {
                 return res.status(404).json({ message: 'Routine not found or not authorized' });
             }
-
+    
+            // Remove _id and userId from the update data
+            const { _id, userId: _, ...updateData } = req.body;
+    
+            // Update the routine
+            const result = await database.collection('routines').findOneAndUpdate(
+                { _id: routineId, userId: userId },
+                { $set: { ...updateData, updatedAt: new Date() } },
+                { returnDocument: 'after' }
+            );
+    
+            if (!result.value) {
+                return res.status(500).json({ message: 'Failed to update routine' });
+            }
+    
             res.json(result.value);
         } catch (error) {
             console.error('Error updating routine:', error);
             res.status(500).json({ message: 'Error updating routine', error: error.message });
         }
     });
+    
 
     // Delete a routine
     router.delete('/:routineId', authenticateToken, async (req, res) => {

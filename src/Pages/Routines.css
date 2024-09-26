@@ -240,3 +240,26 @@ body.dark-theme .routine-card {
 .routine-card li {
     margin-bottom: 5px;
 }
+
+.edit-btn, .delete-btn {
+    padding: 5px 10px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.edit-btn {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.edit-btn:hover, .delete-btn:hover {
+    opacity: 0.8;
+}
