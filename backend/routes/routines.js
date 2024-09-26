@@ -9,27 +9,37 @@ module.exports = function(database) {
     // Create a new routine
     router.post('/', auth, async (req, res) => {
         try {
-            // Find the user to which the routine will be added
-            const user = await database.collection('users').findOne({ _id: new ObjectId(req.user.userId) });
+            console.log('Received request body:', req.body);
+            console.log('User ID from auth middleware:', req.user.userId);
+    
+            const user = await User.findById(req.user.userId);
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
             }
-
+    
+            console.log('Found user:', user);
+    
+            // Ensure user.routines exists
+            if (!user.routines) {
+                user.routines = [];
+            }
+    
+            // Add routine to user's routines array
             const newRoutine = {
-                _id: new ObjectId(), // Generate a new unique ObjectId for the routine
-                ...req.body,
-                createdAt: new Date()
+                name: req.body.name,
+                exercises: req.body.exercises || []
             };
-
-            // Add the new routine to the user's routines array
-            const updatedUser = await database.collection('users').findOneAndUpdate(
-                { _id: new ObjectId(req.user.userId) },
-                { $push: { routines: newRoutine } }, // Push the new routine to the routines array
-                { returnDocument: 'after' } // Return the updated document
-            );
-
-            res.status(201).json(updatedUser.value.routines.find(routine => routine._id.equals(newRoutine._id))); // Return the newly added routine
+            user.routines.push(newRoutine);
+    
+            console.log('Updated user object:', user);
+    
+            // Save user document
+            const savedUser = await user.save();
+            console.log('Saved user:', savedUser);
+    
+            res.status(201).json(savedUser.routines[savedUser.routines.length - 1]); // Return the newly added routine
         } catch (error) {
+            console.error('Server error:', error);
             res.status(400).json({ message: error.message });
         }
     });

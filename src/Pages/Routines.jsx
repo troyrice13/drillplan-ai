@@ -4,7 +4,9 @@ import './Routines.css';
 
 export default function Routines() {
     const [routines, setRoutines] = useState([]);
-    const [editingRoutine, setEditingRoutine] = useState(null);
+    const [isAddingRoutine, setIsAddingRoutine] = useState(false);
+    const [newRoutine, setNewRoutine] = useState({ name: '', exercises: [] });
+    const [newExercise, setNewExercise] = useState({ name: '', sets: '', reps: '' });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
@@ -18,123 +20,142 @@ export default function Routines() {
             const response = await axios.get('http://localhost:3000/api/routines', {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
-            setRoutines(response.data); // Response will be an empty array if no routines are found
-            setLoading(false);
+            setRoutines(response.data);
+            setError('');
         } catch (error) {
             console.error('Error fetching routines:', error);
-            setError('Error fetching routines.');
+            setError('Error fetching routines. Please try again later.');
+        } finally {
             setLoading(false);
         }
     };
 
-    const handleEdit = (routine) => {
-        setEditingRoutine({ ...routine });
-    };
-
-    const handleSave = async () => {
-        try {
-            await axios.put(`http://localhost:3000/api/routines/${editingRoutine._id}`, editingRoutine, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-            });
-            setEditingRoutine(null);
-            fetchRoutines(); // Refresh the list of routines after save
-        } catch (error) {
-            console.error('Error updating routine:', error);
-            setError('Error updating routine.');
+    const handleAddRoutine = async () => {
+        if (newRoutine.name && newRoutine.exercises.length > 0) {
+            try {
+                const response = await axios.post('http://localhost:3000/api/routines', newRoutine, {
+                    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+                });
+                setRoutines([...routines, response.data]);
+                setIsAddingRoutine(false);
+                setNewRoutine({ name: '', exercises: [] });
+                setError('');
+            } catch (error) {
+                console.error('Error creating routine:', error);
+                setError('Error creating routine. Please try again.');
+            }
+        } else {
+            setError('Please provide a name and at least one exercise for the routine.');
         }
     };
 
-    const handleDelete = async (id) => {
-        try {
-            await axios.delete(`http://localhost:3000/api/routines/${id}`, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-            });
-            fetchRoutines(); // Refresh the list of routines after deletion
-        } catch (error) {
-            console.error('Error deleting routine:', error);
-            setError('Error deleting routine.');
+    const addExerciseToRoutine = () => {
+        if (newExercise.name && newExercise.sets && newExercise.reps) {
+            setNewRoutine(prev => ({
+                ...prev,
+                exercises: [...prev.exercises, { ...newExercise, sets: parseInt(newExercise.sets), reps: parseInt(newExercise.reps) }]
+            }));
+            setNewExercise({ name: '', sets: '', reps: '' });
+            setError('');
+        } else {
+            setError('Please fill in all exercise fields.');
         }
     };
 
-    const handleExerciseChange = (index, key, value) => {
-        const updatedExercises = [...editingRoutine.exercises];
-        updatedExercises[index][key] = value;
-        setEditingRoutine({ ...editingRoutine, exercises: updatedExercises });
+    const removeExercise = (index) => {
+        setNewRoutine(prev => ({
+            ...prev,
+            exercises: prev.exercises.filter((_, i) => i !== index)
+        }));
     };
-
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div className="error-message">{error}</div>;
 
     return (
         <div className="routines-container">
             <h1>My Routines</h1>
-            {routines.length === 0 ? (
-                <p>No routines found. Create your first routine to get started!</p>
+            
+            {error && <div className="error-message">{error}</div>}
+            
+            {loading ? (
+                <div className="loading">Loading routines...</div>
             ) : (
-                routines.map((routine) => (
-                    <div key={routine._id} className="routine-card">
-                        <h2>{routine.name}</h2>
-                        <ul>
-                            {routine.exercises.map((exercise, index) => (
-                                <li key={index}>
-                                    {exercise.name}: {exercise.sets} sets, {exercise.reps} reps
-                                </li>
-                            ))}
-                        </ul>
-                        <button onClick={() => handleEdit(routine)}>Edit</button>
-                        <button onClick={() => handleDelete(routine._id)}>Delete</button>
-                    </div>
-                ))
-            )}
-            {editingRoutine && (
-                <EditRoutineForm
-                    routine={editingRoutine}
-                    setEditingRoutine={setEditingRoutine}
-                    handleSave={handleSave}
-                    handleExerciseChange={handleExerciseChange}
-                />
-            )}
-        </div>
-    );
-}
+                <>
+                    <button className="add-routine-btn" onClick={() => setIsAddingRoutine(true)}>
+                        Add New Routine
+                    </button>
 
-// Edit Routine Form Component
-function EditRoutineForm({ routine, setEditingRoutine, handleSave, handleExerciseChange }) {
-    return (
-        <div className="edit-routine-modal">
-            <h3>Edit Routine</h3>
-            <input
-                type="text"
-                value={routine.name}
-                onChange={(e) => setEditingRoutine({ ...routine, name: e.target.value })}
-                placeholder="Routine Name"
-            />
-            {routine.exercises.map((exercise, index) => (
-                <div key={index} className="exercise-inputs">
-                    <input
-                        type="text"
-                        value={exercise.name}
-                        onChange={(e) => handleExerciseChange(index, 'name', e.target.value)}
-                        placeholder="Exercise Name"
-                    />
-                    <input
-                        type="number"
-                        value={exercise.sets}
-                        onChange={(e) => handleExerciseChange(index, 'sets', parseInt(e.target.value))}
-                        placeholder="Sets"
-                    />
-                    <input
-                        type="number"
-                        value={exercise.reps}
-                        onChange={(e) => handleExerciseChange(index, 'reps', parseInt(e.target.value))}
-                        placeholder="Reps"
-                    />
-                </div>
-            ))}
-            <div className="modal-buttons">
-                <button onClick={handleSave}>Save</button>
-                <button onClick={() => setEditingRoutine(null)}>Cancel</button>
-            </div>
+                    {isAddingRoutine && (
+                        <div className="overlay">
+                            <div className="card-overlay">
+                                <input
+                                    type="text"
+                                    value={newRoutine.name}
+                                    onChange={(e) => setNewRoutine({...newRoutine, name: e.target.value})}
+                                    placeholder="Enter routine name"
+                                    className="routine-name-input"
+                                />
+                                <div className="add-exercise">
+                                    <input
+                                        type="text"
+                                        value={newExercise.name}
+                                        onChange={(e) => setNewExercise({...newExercise, name: e.target.value})}
+                                        placeholder="Exercise"
+                                    />
+                                    <input
+                                        type="number"
+                                        value={newExercise.sets}
+                                        onChange={(e) => setNewExercise({...newExercise, sets: e.target.value})}
+                                        placeholder="Sets"
+                                    />
+                                    <input
+                                        type="number"
+                                        value={newExercise.reps}
+                                        onChange={(e) => setNewExercise({...newExercise, reps: e.target.value})}
+                                        placeholder="Reps"
+                                    />
+                                    <button onClick={addExerciseToRoutine} className="add-exercise-btn">Add</button>
+                                </div>
+                                {newRoutine.exercises.length > 0 && (
+                                    <div className="exercise-list">
+                                        <h3>Exercises:</h3>
+                                        <ul>
+                                            {newRoutine.exercises.map((exercise, index) => (
+                                                <li key={index}>
+                                                    {exercise.name}: {exercise.sets} sets, {exercise.reps} reps
+                                                    <button onClick={() => removeExercise(index)} className="remove-exercise-btn">Remove</button>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+                                <div className="button-group">
+                                    <button onClick={() => setIsAddingRoutine(false)} className="cancel-btn">Cancel</button>
+                                    <button onClick={handleAddRoutine} className="save-btn">Save Routine</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {routines.length === 0 ? (
+                        <div className="no-routines-message">
+                            No routines yet. Add one now to get started!
+                        </div>
+                    ) : (
+                        <div className="routines-list">
+                            {routines.map((routine) => (
+                                <div key={routine._id} className="routine-card">
+                                    <h2>{routine.name}</h2>
+                                    <ul>
+                                        {routine.exercises.map((exercise, index) => (
+                                            <li key={index}>{exercise.name}: {exercise.sets} sets, {exercise.reps} reps</li>
+                                        ))}
+                                    </ul>
+                                    {/* Edit and Delete buttons would go here */}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </>
+            )}
         </div>
     );
 }

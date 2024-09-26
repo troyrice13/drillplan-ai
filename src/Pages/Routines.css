@@ -1,77 +1,242 @@
 .routines-container {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    color: var(--text-light);
 }
 
-.routine-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
+body.dark-theme .routines-container {
+    color: var(--text-dark);
 }
 
-.routine-card h2 {
-    margin: 0 0 10px;
-    font-size: 1.5em;
+.routines-container h1 {
+    color: var(--accent-color);
 }
 
-.routine-card ul {
-    padding-left: 20px;
-    list-style-type: disc;
-}
-
-button {
-    margin-right: 10px;
-    padding: 8px 12px;
+.add-routine-btn {
+    background-color: var(--button-bg-light);
+    color: var(--text-light);
     border: none;
-    border-radius: 4px;
+    padding: 8px 16px;
+    border-radius: 5px;
     cursor: pointer;
+    font-size: 0.9em;
 }
 
-button:hover {
-    opacity: 0.8;
+body.dark-theme .add-routine-btn {
+    background-color: var(--button-bg-dark);
+    color: var(--text-dark);
 }
 
-.edit-routine-modal {
+.add-routine-btn:hover {
+    background-color: var(--button-hover-light);
+}
+
+body.dark-theme .add-routine-btn:hover {
+    background-color: var(--button-hover-dark);
+}
+
+.overlay {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #f9f9f9;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    z-index: 1000;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.edit-routine-modal h3 {
+.card-overlay {
+    background-color: var(--bg-light);
+    padding: 20px;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+body.dark-theme .card-overlay {
+    background-color: var(--bg-dark);
+}
+
+.routine-name-input {
+    width: calc(100% - 20px);
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid var(--accent-color);
+    border-radius: 5px;
+    font-size: 0.9em;
+}
+
+.add-exercise {
+    display: flex;
+    gap: 8px;
     margin-bottom: 15px;
 }
 
-.exercise-inputs {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.exercise-inputs input {
+.add-exercise input {
     flex: 1;
     padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid var(--accent-color);
+    border-radius: 5px;
+    font-size: 0.9em;
 }
 
-.modal-buttons {
+.add-exercise-btn {
+    background-color: var(--button-bg-light);
+    color: var(--text-light);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+body.dark-theme .add-exercise-btn {
+    background-color: var(--button-bg-dark);
+    color: var(--text-dark);
+}
+
+.add-exercise-btn:hover {
+    background-color: var(--button-hover-light);
+}
+
+body.dark-theme .add-exercise-btn:hover {
+    background-color: var(--button-hover-dark);
+}
+
+.button-group {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.cancel-btn, .save-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.cancel-btn {
+    background-color: var(--button-bg-light);
+    color: var(--text-light);
+}
+
+body.dark-theme .cancel-btn {
+    background-color: var(--button-bg-dark);
+    color: var(--text-dark);
+}
+
+.save-btn {
+    background-color: var(--accent-color);
+    color: var(--text-dark);
+}
+
+.cancel-btn:hover, .save-btn:hover {
+    opacity: 0.9;
+}
+
+.exercise-list {
+    margin-top: 15px;
+    border-top: 1px solid var(--accent-color);
+    padding-top: 15px;
+}
+
+.exercise-list h3 {
+    margin-top: 0;
+    color: var(--accent-color);
+}
+
+.exercise-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.exercise-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+}
+
+.remove-exercise-btn {
+    background-color: transparent;
+    color: var(--accent-color);
+    border: none;
+    cursor: pointer;
+    font-size: 0.8em;
+    padding: 2px 5px;
+}
+
+.remove-exercise-btn:hover {
+    text-decoration: underline;
 }
 
 .error-message {
-    color: #ff0000;
-    font-weight: bold;
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+}
+
+body.dark-theme .error-message {
+    background-color: #4a0f0f;
+    color: #ff8a80;
+}
+
+.loading {
     text-align: center;
+    color: var(--text-light);
+    font-style: italic;
+}
+
+body.dark-theme .loading {
+    color: var(--text-dark);
+}
+
+.no-routines-message {
+    text-align: center;
+    margin-top: 20px;
+    font-style: italic;
+    color: var(--text-light);
+}
+
+body.dark-theme .no-routines-message {
+    color: var(--text-dark);
+}
+
+.routines-list {
+    margin-top: 20px;
+}
+
+.routine-card {
+    background-color: var(--bg-light);
+    border: 1px solid var(--accent-color);
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+body.dark-theme .routine-card {
+    background-color: var(--bg-dark);
+}
+
+.routine-card h2 {
+    color: var(--accent-color);
+    margin-top: 0;
+}
+
+.routine-card ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.routine-card li {
+    margin-bottom: 5px;
 }
