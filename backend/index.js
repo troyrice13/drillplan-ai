@@ -1,11 +1,7 @@
+const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const authRoutes = require('./routes/auth');
-const protectedRoutes = require('./routes/protectedRoutes');
-const profileRoutes = require('./routes/profile');
-const routineRoutes = require('./routes/routines');
-const express = require('express');
 
 dotenv.config();
 
@@ -15,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-const uri = process.env.MONGODB_URI || "mongodb+srv://troyrice13:N2mkY25P6NxAlMmG@drillplan.7pbjz.mongodb.net/?retryWrites=true&w=majority&appName=DrillPlan";
+const uri = process.env.MONGODB_URI || "mongodb+srv://troyrice13:<password>@drillplan.7pbjz.mongodb.net/?retryWrites=true&w=majority&appName=DrillPlan";
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -27,13 +23,23 @@ const client = new MongoClient(uri, {
 
 async function startServer() {
   try {
+    // Connect the client to the server
     await client.connect();
     console.log("Connected to MongoDB");
 
+    // Send a ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+
     const database = client.db("DrillPlan"); // Make sure this matches your database name
 
+    // Import routes
+    const authRoutes = require('./routes/auth');
+    const profileRoutes = require('./routes/profile');
+    const routineRoutes = require('./routes/routines');
+
+    // Use routes
     app.use('/api/auth', authRoutes(database));
-    // app.use('/api/protected', protectedRoutes(database));
     app.use('/api/profile', profileRoutes(database));
     app.use('/api/routines', routineRoutes(database));
 
@@ -51,6 +57,7 @@ async function startServer() {
       }
     });
 
+    // Start the server
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
     });
@@ -62,3 +69,10 @@ async function startServer() {
 }
 
 startServer().catch(console.dir);
+
+// Handle server shutdown
+process.on('SIGINT', async () => {
+  await client.close();
+  console.log('MongoDB connection closed');
+  process.exit(0);
+});

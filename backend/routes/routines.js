@@ -1,119 +1,78 @@
 const express = require('express');
 const router = express.Router();
+const authenticateToken = require('../middleware/auth');
 const { ObjectId } = require('mongodb');
-const auth = require('../middleware/auth'); // Assuming you have an auth middleware
-const User = require('../models/User'); // Mongoose User model with embedded routines
 
 module.exports = function(database) {
-
     // Create a new routine
-    router.post('/', auth, async (req, res) => {
+    router.post('/', authenticateToken, async (req, res) => {
         try {
-            console.log('Received request body:', req.body);
-            console.log('User ID from auth middleware:', req.user.userId);
-    
-            const user = await User.findById(req.user.userId);
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
-            }
-    
-            console.log('Found user:', user);
-    
-            // Ensure user.routines exists
-            if (!user.routines) {
-                user.routines = [];
-            }
-    
-            // Add routine to user's routines array
+            const { name, exercises } = req.body;
             const newRoutine = {
-                name: req.body.name,
-                exercises: req.body.exercises || []
+                name,
+                exercises,
+                userId: new ObjectId(req.user.userId),
+                createdAt: new Date()
             };
-            user.routines.push(newRoutine);
-    
-            console.log('Updated user object:', user);
-    
-            // Save user document
-            const savedUser = await user.save();
-            console.log('Saved user:', savedUser);
-    
-            res.status(201).json(savedUser.routines[savedUser.routines.length - 1]); // Return the newly added routine
+
+            const result = await database.collection('routines').insertOne(newRoutine);
+            res.status(201).json({ ...newRoutine, _id: result.insertedId });
         } catch (error) {
-            console.error('Server error:', error);
-            res.status(400).json({ message: error.message });
+            console.error('Error creating routine:', error);
+            res.status(500).json({ message: 'Error creating routine', error: error.message });
         }
     });
 
     // Get all routines for a user
-    router.get('/', auth, async (req, res) => {
+    router.get('/', authenticateToken, async (req, res) => {
         try {
-            const user = await database.collection('users').findOne({ _id: new ObjectId(req.user.userId) });
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
-            }
-
-            // Return an empty array if no routines are found
-            res.json(user.routines || []);
+            const routines = await database.collection('routines')
+                .find({ userId: new ObjectId(req.user.userId) })
+                .toArray();
+            res.json(routines);
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            console.error('Error fetching routines:', error);
+            res.status(500).json({ message: 'Error fetching routines', error: error.message });
         }
     });
 
     // Update a routine
-    router.put('/:routineId', auth, async (req, res) => {
+    router.put('/:routineId', authenticateToken, async (req, res) => {
         try {
-            const user = await database.collection('users').findOne({ _id: new ObjectId(req.user.userId) });
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
-            }
-
-            const routineIndex = user.routines.findIndex(routine => routine._id.equals(new ObjectId(req.params.routineId)));
-            if (routineIndex === -1) {
-                return res.status(404).json({ message: 'Routine not found' });
-            }
-
-            // Update the specific routine in the routines array
-            const updatedRoutine = { ...user.routines[routineIndex], ...req.body };
-            user.routines[routineIndex] = updatedRoutine;
-
-            // Update the user document with the modified routines array
-            const result = await database.collection('users').findOneAndUpdate(
-                { _id: new ObjectId(req.user.userId) },
-                { $set: { routines: user.routines } },
+            const { name, exercises } = req.body;
+            const result = await database.collection('routines').findOneAndUpdate(
+                { _id: new ObjectId(req.params.routineId), userId: new ObjectId(req.user.userId) },
+                { $set: { name, exercises, updatedAt: new Date() } },
                 { returnDocument: 'after' }
             );
 
-            res.json(result.value.routines[routineIndex]);
+            if (!result.value) {
+                return res.status(404).json({ message: 'Routine not found or not authorized' });
+            }
+
+            res.json(result.value);
         } catch (error) {
-            res.status(400).json({ message: error.message });
+            console.error('Error updating routine:', error);
+            res.status(500).json({ message: 'Error updating routine', error: error.message });
         }
     });
 
     // Delete a routine
-    router.delete('/:routineId', auth, async (req, res) => {
+    router.delete('/:routineId', authenticateToken, async (req, res) => {
         try {
-            const user = await database.collection('users').findOne({ _id: new ObjectId(req.user.userId) });
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
+            const result = await database.collection('routines').deleteOne({
+                _id: new ObjectId(req.params.routineId),
+                userId: new ObjectId(req.user.userId)
+            });
+
+            if (result.deletedCount === 0) {
+                return res.status(404).json({ message: 'Routine not found or not authorized' });
             }
 
-            const routineIndex = user.routines.findIndex(routine => routine._id.equals(new ObjectId(req.params.routineId)));
-            if (routineIndex === -1) {
-                return res.status(404).json({ message: 'Routine not found' });
-            }
-
-            // Remove the routine from the array
-            user.routines.splice(routineIndex, 1);
-
-            // Update the user document with the modified routines array
-            await database.collection('users').findOneAndUpdate(
-                { _id: new ObjectId(req.user.userId) },
-                { $set: { routines: user.routines } }
-            );
-
-            res.json({ message: 'Routine deleted' });
+            res.json({ message: 'Routine deleted successfully' });
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            console.error('Error deleting routine:', error);
+            res.status(500).json({ message: 'Error deleting routine', error: error.message });
         }
     });
 
