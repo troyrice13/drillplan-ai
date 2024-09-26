@@ -52,12 +52,12 @@ body.dark-theme .login-title {
   margin-bottom: 20px;
   border-radius: 10px;
   border: none;
-  background-color: #E8E8E8; /* Light input background */
+  background-color: #E8E8E8;
   color: var(--text-light);
 }
 
 body.dark-theme .login-form input {
-  background-color: #2E3B4A; /* Dark input background */
+  background-color: #2E3B4A; 
   color: var(--text-dark);
 }
 

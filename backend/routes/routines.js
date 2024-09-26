@@ -4,17 +4,19 @@ const { ObjectId } = require('mongodb');
 const authenticateToken = require('../middleware/auth');
 
 module.exports = function(database) {
+
     // Create a new routine
     router.post('/', authenticateToken, async (req, res) => {
         try {
             const { name, exercises } = req.body;
+    
             const newRoutine = {
                 name,
                 exercises,
                 userId: new ObjectId(req.user.userId),
                 createdAt: new Date()
             };
-
+    
             const result = await database.collection('routines').insertOne(newRoutine);
             res.status(201).json({ ...newRoutine, _id: result.insertedId });
         } catch (error) {
@@ -22,6 +24,7 @@ module.exports = function(database) {
             res.status(500).json({ message: 'Error creating routine', error: error.message });
         }
     });
+    
 
     // Get all routines for a user
     router.get('/', authenticateToken, async (req, res) => {
@@ -58,13 +61,11 @@ module.exports = function(database) {
                 return res.status(404).json({ message: 'Routine not found or not authorized' });
             }
     
-            // Remove _id, userId, and createdAt from the update data if not needed
+  
             const { _id, userId: _, createdAt, ...updateData } = req.body;
     
-            // Log the data to be updated in the database for clarity
             console.log('Data to update in DB:', updateData);
     
-            // Update the routine in the database and use modifiedCount to verify the update
             const result = await database.collection('routines').updateOne(
                 { _id: routineId, userId: userId },
                 { $set: { ...updateData, updatedAt: new Date() } }
@@ -76,7 +77,6 @@ module.exports = function(database) {
             }
     
             console.log('Routine updated successfully:', result);
-            // Send a success response
             res.json({ message: 'Routine updated successfully', ...updateData });
         } catch (error) {
             console.error('Error updating routine:', error);

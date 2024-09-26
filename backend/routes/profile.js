@@ -1,17 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const authenticateToken = require('../middleware/auth');
-const { ObjectId } = require('mongodb'); // Import ObjectId correctly from mongodb
+const { ObjectId } = require('mongodb');
 
 module.exports = function(database) {
     router.get('/', authenticateToken, async (req, res) => {
         try {
             console.log('Attempting to find user with ID:', req.user.userId);
 
-            // Use new ObjectId(...) to create a valid ObjectId instance
             const user = await database.collection('users').findOne(
                 { _id: new ObjectId(req.user.userId) },
-                { projection: { password: 0 } } // Exclude password field
+                { projection: { password: 0 } }
             );
 
             if (!user) {

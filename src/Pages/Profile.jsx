@@ -32,7 +32,6 @@ function Profile() {
             <div className="profile-details">
                 <p><strong>Username:</strong> {profile.username}</p>
                 <p><strong>Email:</strong> {profile.email}</p>
-                {/* Add other profile fields as needed */}
             </div>
         </div>
     );

@@ -73,7 +73,7 @@ export default function Routines() {
             } catch (error) {
                 console.error('Error updating routine:', error.response?.data || error.message);
                 setError('Error updating routine. Please try again.');
-                fetchRoutines(); // Reset to server state if the update fails
+                fetchRoutines(); 
             }
         } else {
             setError('Please provide a name and at least one exercise for the routine.');
