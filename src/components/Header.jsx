@@ -71,8 +71,8 @@ export default function Header() {
                     </>
                 ) : (
                     <>
-                        <button className="login-btn" onClick={() => navigate('/login')}>Login</button>
-                        <button className="signup-btn" onClick={() => navigate('/login')}>Sign Up</button>
+                        <button className="login-btn" onClick={() => navigate('/login', { state: { isLogin: true } })}>Login</button>
+                        <button className="signup-btn" onClick={() => navigate('/login', { state: { isLogin: false } })}>Sign Up</button>
                     </>
                 )}
                 <button className="theme-toggle-btn" onClick={toggleTheme}>

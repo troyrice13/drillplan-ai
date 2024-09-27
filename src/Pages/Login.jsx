@@ -1,11 +1,12 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import './Login.css';
 
 export default function Login() {
-  const [isLogin, setIsLogin] = useState(true);
+  const location = useLocation();
+  const [isLogin, setIsLogin] = useState(location.state?.isLogin !== false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
