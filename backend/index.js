@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-const uri = process.env.MONGODB_URI
+const uri = process.env.MONGODB_URI;
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -23,15 +23,13 @@ const client = new MongoClient(uri, {
 
 async function startServer() {
   try {
-    // Connect the client to the server
     await client.connect();
     console.log("Connected to MongoDB");
 
-    // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
-    const database = client.db("DrillPlan"); // Make sure this matches your database name
+    const database = client.db("DrillPlan");
 
     // Import routes
     const authRoutes = require('./routes/auth');
@@ -57,6 +55,12 @@ async function startServer() {
       }
     });
 
+    // Global error handler
+    app.use((err, req, res, next) => {
+      console.error(err.stack);
+      res.status(500).send('Something broke!');
+    });
+
     // Start the server
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
@@ -72,7 +76,18 @@ startServer().catch(console.dir);
 
 // Handle server shutdown
 process.on('SIGINT', async () => {
-  await client.close();
-  console.log('MongoDB connection closed');
-  process.exit(0);
+  try {
+    await client.close();
+    console.log('MongoDB connection closed');
+    process.exit(0);
+  } catch (error) {
+    console.error('Error during shutdown', error);
+    process.exit(1);
+  }
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  // Application specific logging, throwing an error, or other logic here
 });

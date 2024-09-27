@@ -46,11 +46,16 @@ module.exports = function(database) {
                 return res.status(400).json({ message: 'Invalid credentials' });
             }
             
+            const expiresIn = '7d'; // Set to 7 days, adjust as needed
             const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-                expiresIn: '1h',
+                expiresIn: expiresIn,
             });
             
-            res.json({ token, user: { username: user.username, email: user.email } });
+            res.json({ 
+                token, 
+                user: { username: user.username, email: user.email },
+                expiresIn: 7 * 24 * 60 * 60 * 1000 // milliseconds
+            });
         } catch (err) {
             console.error('Login error:', err);
             res.status(500).json({ message: 'Server error', error: err.message });
