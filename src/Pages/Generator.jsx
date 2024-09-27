@@ -6,7 +6,7 @@ import './Generator.css';
 export default function Generator() {
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState([
-        { role: 'system', content: "Welcome! Let's create your custom workout routine. First, could you tell me your fitness goals (e.g., building muscle, losing weight, improving endurance)?" }
+        { role: 'system', content: "Welcome! Let's create your custom workout routine. First, could you tell me your fitness goals (e.g., building muscle, losing weight, improving endurance)? If you have any preferences for the types of exercises or equipment, let me know as well." }
     ]);
     const [loading, setLoading] = useState(false);
     const [generatedRoutine, setGeneratedRoutine] = useState(null);
@@ -19,11 +19,10 @@ export default function Generator() {
         const lines = response.split('\n');
         let formattedResponse = '';
         let inList = false;
-    
+
         lines.forEach(line => {
             line = line.trim();
             if (line.startsWith('#')) {
-                // Headers
                 const headerLevel = line.split('#').length - 1;
                 formattedResponse += `${'#'.repeat(headerLevel)} ${line.replace(/#/g, '').trim()}\n`;
             } else if (line.match(/^\d+\.\s+.+$/)) {
@@ -46,11 +45,10 @@ export default function Generator() {
                 formattedResponse += `${line}\n`;
             }
         });
-    
+
         return formattedResponse.trim();
     };
 
-    // Function to convert AI response to a routine object
     const formatAIResponseToRoutine = (formattedResponse) => {
         const lines = formattedResponse.split('\n');
         let routine = { name: "", exercises: [] };
@@ -66,21 +64,22 @@ export default function Generator() {
                 return;
             }
     
+
             if (line.startsWith('- **') && line.endsWith('**')) {
                 currentExercise = {
                     name: line.replace(/[-*]/g, '').replace(/\*\*/g, '').trim(),
                     sets: 0,
                     reps: 0,
-                    rest: ""
+                    weight: 0
                 };
                 routine.exercises.push(currentExercise);
                 return;
             }
     
-            // Identify Sets, Reps, and Rest
-            const setsMatch = line.match(/Sets:\s*(\d+)/);
-            const repsMatch = line.match(/Reps:\s*(\d+)/);
-            const restMatch = line.match(/Rest:\s*(\d+)\s*seconds/);
+
+            const setsMatch = line.match(/Sets:\s*(\d+)/i);
+            const repsMatch = line.match(/Reps:\s*(\d+)/i);
+            const weightMatch = line.match(/Weight:\s*(\d+)/i);
     
             if (currentExercise) {
                 if (setsMatch) {
@@ -89,19 +88,32 @@ export default function Generator() {
                 if (repsMatch) {
                     currentExercise.reps = parseInt(repsMatch[1]);
                 }
-                if (restMatch) {
-                    currentExercise.rest = `${restMatch[1]} seconds`;
+                if (weightMatch) {
+                    currentExercise.weight = parseInt(weightMatch[1]);
                 }
             }
+        });
+    
+
+        if (!routine.name || routine.exercises.length === 0) {
+            console.error("Routine parsing failed: Missing routine name or exercises.");
+            return null;
+        }
+ 
+        routine.exercises = routine.exercises.filter(exercise => {
+            if (!exercise.name || !exercise.sets || !exercise.reps) {
+                console.error("Incomplete exercise details:", exercise);
+                return false;
+            }
+            return true;
         });
     
         console.log("Parsed Routine:", routine);
         return routine;
     };
     
-    
-    
-    // Function to save the routine to the backend
+
+
     const saveRoutineToBackend = async (routine) => {
         try {
             const response = await axios.post('http://localhost:3000/api/routines', routine, {
@@ -121,31 +133,19 @@ export default function Generator() {
         const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
         try {
             const structuredPrompt = `
-            You are a personal trainer assistant. Always respond with workout routines in the following format, regardless of the user's request:
-    
-            Format:
+            You are a personal trainer assistant. Provide workout routines in a structured format, while being conversational and friendly. Here is an example format to follow for each exercise:
+
             - **Routine Name**
               - **Exercise Name**
                 - Sets: X
                 - Reps: Y
                 - Rest: Z seconds
-    
-            Example:
-            - **Chest and Triceps Workout**
-              - **Bench Press**
-                - Sets: 4
-                - Reps: 8-10
-                - Rest: 60 seconds
-              - **Incline Dumbbell Press**
-                - Sets: 3
-                - Reps: 10-12
-                - Rest: 60 seconds
-    
-            Please follow this format exactly for the user's request below:
-            
-            "${userMessage}"
+
+            Include any necessary context in your responses to keep the conversation engaging. If the user asks for details about an exercise, provide a brief description.
+
+            User request: "${userMessage}"
             `;
-    
+
             const response = await axios.post(
                 'https://api.openai.com/v1/chat/completions',
                 {
@@ -163,18 +163,17 @@ export default function Generator() {
                     }
                 }
             );
-    
+
             const aiText = response.data.choices[0].message.content;
             console.log("AI Response:", aiText); 
-    
+
             const formattedResponse = formatAIResponse(aiText);
-    
-         
+
             const generatedRoutine = formatAIResponseToRoutine(formattedResponse);
-    
+
             console.log("Generated Routine:", generatedRoutine);
             setGeneratedRoutine(generatedRoutine); 
-    
+
             return formattedResponse;
         } catch (error) {
             console.error("Error fetching AI response:", error);
@@ -183,7 +182,6 @@ export default function Generator() {
             setLoading(false);
         }
     };
-    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -218,7 +216,7 @@ export default function Generator() {
                         )}
                     </li>
                 ))}
-                {loading && <li className="ai-message">AI is thinking...</li>}
+                {loading && <li className="ai-message">AI is thinking... Here are some tips for better results: mention specific muscle groups or workout goals.</li>}
             </ul>
             <form className="generator-form" onSubmit={handleSubmit}>
                 <input 
@@ -237,7 +235,7 @@ export default function Generator() {
                     <h3>Generated Routine:</h3>
                     <ul>
                         {generatedRoutine.exercises.map((exercise, index) => (
-                            <li key={index}>{exercise.name}: {exercise.sets} sets, {exercise.reps} reps</li>
+                            <li key={index}>{exercise.name}: {exercise.sets} sets, {exercise.reps} reps, Rest: {exercise.rest}</li>
                         ))}
                     </ul>
                     <button className="save-routine-btn" onClick={handleSaveRoutine}>Save Routine</button>
