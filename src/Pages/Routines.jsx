@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Routines.css';
+import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa'; // Using react-icons for better visual appearance
 
 export default function Routines() {
     const [routines, setRoutines] = useState([]);
@@ -52,34 +53,21 @@ export default function Routines() {
 
     const handleEditRoutine = async () => {
         if (editingRoutine.name && editingRoutine.exercises.length > 0) {
-            const updatedRoutines = routines.map(r =>
-                r._id === editingRoutine._id ? { ...r, ...editingRoutine } : r
-            );
-            setRoutines(updatedRoutines);
-    
             try {
-                const { _id, userId, ...routineWithoutIdAndUserId } = editingRoutine;
-                const response = await axios.put(
-                    `http://localhost:3000/api/routines/${editingRoutine._id}`,
-                    routineWithoutIdAndUserId,
-                    {
-                        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-                    }
-                );
-    
+                const response = await axios.put(`http://localhost:3000/api/routines/${editingRoutine._id}`, editingRoutine, {
+                    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+                });
                 setRoutines(routines.map(r => r._id === editingRoutine._id ? response.data : r));
                 setEditingRoutine(null);
                 setError('');
             } catch (error) {
-                console.error('Error updating routine:', error.response?.data || error.message);
+                console.error('Error updating routine:', error);
                 setError('Error updating routine. Please try again.');
-                fetchRoutines(); 
             }
         } else {
             setError('Please provide a name and at least one exercise for the routine.');
         }
     };    
-    
 
     const handleDeleteRoutine = async (routineId) => {
         try {
@@ -117,15 +105,13 @@ export default function Routines() {
     return (
         <div className="routines-container">
             <h1>My Routines</h1>
-            
             {error && <div className="error-message">{error}</div>}
-            
             {loading ? (
                 <div className="loading">Loading routines...</div>
             ) : (
                 <>
                     <button className="add-routine-btn" onClick={() => setIsAddingRoutine(true)}>
-                        Add New Routine
+                        <FaPlus /> Add New Routine
                     </button>
 
                     {isAddingRoutine && (
@@ -241,14 +227,18 @@ export default function Routines() {
                             {routines.map((routine) => (
                                 <div key={routine._id} className="routine-card">
                                     <h2>{routine.name}</h2>
-                                    <ul>
+                                    <ul className="exercise-details">
                                         {routine.exercises.map((exercise, index) => (
-                                            <li key={`${routine._id}-${index}`}>{exercise.name}: {exercise.sets} sets, {exercise.reps} reps</li>
+                                            <li key={`${routine._id}-${index}`} className="exercise-item">
+                                                <span>{exercise.name}</span>
+                                                <span>{exercise.sets} sets</span>
+                                                <span>{exercise.reps} reps</span>
+                                            </li>
                                         ))}
                                     </ul>
                                     <div className="button-group">
-                                        <button onClick={() => setEditingRoutine(routine)} className="edit-btn">Edit</button>
-                                        <button onClick={() => handleDeleteRoutine(routine._id)} className="delete-btn">Delete</button>
+                                        <button onClick={() => setEditingRoutine(routine)} className="edit-btn"><FaEdit /> Edit</button>
+                                        <button onClick={() => handleDeleteRoutine(routine._id)} className="delete-btn"><FaTrash /> Delete</button>
                                     </div>
                                 </div>
                             ))}

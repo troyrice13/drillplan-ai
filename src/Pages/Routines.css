@@ -1,26 +1,32 @@
+/* General Styles */
 .routines-container {
-    max-width: 1200px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 20px;
-    color: var(--text-light);
-}
-
-body.dark-theme .routines-container {
-    color: var(--text-dark);
+    font-family: 'Inter', sans-serif;
 }
 
 .routines-container h1 {
+    font-size: 2em;
     color: var(--accent-color);
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .add-routine-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     background-color: var(--button-bg-light);
     color: var(--text-light);
     border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
+    padding: 10px 20px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 0.9em;
+    font-size: 1em;
+    margin: 0 auto 20px auto;
+    transition: background-color 0.3s;
 }
 
 body.dark-theme .add-routine-btn {
@@ -42,30 +48,54 @@ body.dark-theme .add-routine-btn:hover {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 }
 
 .card-overlay {
     background-color: var(--bg-light);
-    padding: 20px;
+    color: var(--text-light);
+    padding: 30px;
     border-radius: 10px;
-    width: fit-content;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: fit-content;
+    width: 100%;
+    animation: slide-in 0.3s ease-in-out;
 }
 
 body.dark-theme .card-overlay {
     background-color: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .routine-name-input {
-    width: calc(100% - 20px);
-    padding: 8px;
+    width: 100%;
+    padding: 10px;
     margin-bottom: 15px;
     border: 1px solid var(--accent-color);
     border-radius: 5px;
-    font-size: 0.9em;
+    font-size: 1em;
+    color: var(--text-light);
+    background-color: var(--bg-light);
+}
+
+body.dark-theme .routine-name-input {
+    color: var(--text-dark);
+    background-color: var(--bg-dark);
 }
 
 .add-exercise {
@@ -79,7 +109,14 @@ body.dark-theme .card-overlay {
     padding: 8px;
     border: 1px solid var(--accent-color);
     border-radius: 5px;
-    font-size: 0.9em;
+    font-size: 1em;
+    color: var(--text-light);
+    background-color: var(--bg-light);
+}
+
+body.dark-theme .add-exercise input {
+    color: var(--text-dark);
+    background-color: var(--bg-dark);
 }
 
 .add-exercise-btn {
@@ -89,7 +126,8 @@ body.dark-theme .card-overlay {
     padding: 8px 12px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 0.9em;
+    font-size: 1em;
+    transition: background-color 0.3s;
 }
 
 body.dark-theme .add-exercise-btn {
@@ -117,21 +155,15 @@ body.dark-theme .add-exercise-btn:hover {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 0.9em;
-}
-
-.cancel-btn {
+    font-size: 1em;
+    transition: opacity 0.3s;
     background-color: var(--button-bg-light);
     color: var(--text-light);
 }
 
-body.dark-theme .cancel-btn {
+body.dark-theme .cancel-btn, 
+body.dark-theme .save-btn {
     background-color: var(--button-bg-dark);
-    color: var(--text-dark);
-}
-
-.save-btn {
-    background-color: var(--accent-color);
     color: var(--text-dark);
 }
 
@@ -160,7 +192,12 @@ body.dark-theme .cancel-btn {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 8px;
-    font-size: 0.9em;
+    font-size: 1em;
+    color: var(--text-light);
+}
+
+body.dark-theme .exercise-list li {
+    color: var(--text-dark);
 }
 
 .remove-exercise-btn {
@@ -168,7 +205,7 @@ body.dark-theme .cancel-btn {
     color: var(--accent-color);
     border: none;
     cursor: pointer;
-    font-size: 0.8em;
+    font-size: 0.9em;
     padding: 2px 5px;
 }
 
@@ -183,6 +220,7 @@ body.dark-theme .cancel-btn {
     border-radius: 5px;
     margin-bottom: 15px;
     font-size: 0.9em;
+    text-align: center;
 }
 
 body.dark-theme .error-message {
@@ -213,51 +251,76 @@ body.dark-theme .no-routines-message {
 
 .routines-list {
     margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
 }
 
 .routine-card {
     background-color: var(--bg-light);
     border: 1px solid var(--accent-color);
-    border-radius: 5px;
-    padding: 15px;
-    margin-bottom: 15px;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
 body.dark-theme .routine-card {
     background-color: var(--bg-dark);
 }
 
+.routine-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
 .routine-card h2 {
     color: var(--accent-color);
     margin-top: 0;
+    font-size: 1.4em;
+    border-bottom: 1px solid var(--accent-color);
+    padding-bottom: 5px;
 }
 
-.routine-card ul {
+.exercise-details {
     list-style-type: none;
     padding: 0;
+    margin: 15px 0;
 }
 
-.routine-card li {
-    margin-bottom: 5px;
+.exercise-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--accent-color-light);
+    font-size: 0.9em;
+    color: var(--text-light);
+}
+
+body.dark-theme .exercise-item {
+    color: var(--text-dark);
 }
 
 .edit-btn, .delete-btn {
-    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
     margin-right: 10px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 0.9em;
+    transition: opacity 0.3s;
+    background-color: var(--button-bg-light);
+    color: var(--text-light);
 }
 
-.edit-btn {
-    background-color: var(--accent-color);
-    color: white;
-}
-
-.delete-btn {
-    background-color: #dc3545;
-    color: white;
+body.dark-theme .edit-btn, 
+body.dark-theme .delete-btn {
+    background-color: var(--button-bg-dark);
+    color: var(--text-dark);
 }
 
 .edit-btn:hover, .delete-btn:hover {
