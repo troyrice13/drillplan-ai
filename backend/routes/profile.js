@@ -4,6 +4,7 @@ const authenticateToken = require('../middleware/auth');
 const { ObjectId } = require('mongodb');
 
 module.exports = function(database) {
+    // GET route (existing)
     router.get('/', authenticateToken, async (req, res) => {
         try {
             console.log('Attempting to find user with ID:', req.user.userId);
@@ -32,6 +33,35 @@ module.exports = function(database) {
                     stack: error.stack
                 });
             }
+        }
+    });
+
+    // New PUT route for updating profile
+    router.put('/', authenticateToken, async (req, res) => {
+        try {
+            const { email, height, weight, fitnessGoal } = req.body;
+            const userId = req.user.userId;
+
+            const updateResult = await database.collection('users').updateOne(
+                { _id: new ObjectId(userId) },
+                { $set: { email, height, weight, fitnessGoal } }
+            );
+
+            if (updateResult.matchedCount === 0) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            if (updateResult.modifiedCount === 0) {
+                return res.status(200).json({ message: 'No changes were made to the profile' });
+            }
+
+            res.status(200).json({ message: 'Profile updated successfully' });
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            res.status(500).json({ 
+                message: 'An error occurred while updating the profile', 
+                error: error.message 
+            });
         }
     });
 
