@@ -11,7 +11,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('tokenExpiration');
     setIsLoggedIn(false);
     setUser(null);
-    // Navigation will be handled by the component that calls logout
   }, []);
 
   const setTokenExpirationTimer = useCallback((duration) => {
@@ -28,7 +27,6 @@ export const AuthProvider = ({ children }) => {
       const currentTime = new Date().getTime();
       if (currentTime < parseInt(expirationTime)) {
         setIsLoggedIn(true);
-        // Optionally fetch user data here if needed
         setTokenExpirationTimer(parseInt(expirationTime) - currentTime);
       } else {
         logout();
@@ -50,11 +48,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const refreshToken = useCallback(async () => {
-    // Implement token refresh logic here
-    // This should make a call to your backend to get a new token
-    // Update the token and expiration time in localStorage and state
     try {
-      // Example API call (replace with your actual API endpoint)
       const response = await fetch('/api/auth/refresh-token', {
         method: 'POST',
         headers: {

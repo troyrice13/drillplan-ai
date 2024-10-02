@@ -23,7 +23,6 @@ function Profile() {
     const [isEditing, setIsEditing] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [editedProfile, setEditedProfile] = useState({
-        email: '',
         heightFeet: '',
         heightInches: '',
         weightLbs: '',
@@ -49,7 +48,6 @@ function Profile() {
                 weightLbs: kgToLbs(fetchedProfile.weight || 0),
             });
             setEditedProfile({
-                email: fetchedProfile.email || '',
                 heightFeet: feet.toString(),
                 heightInches: inches.toString(),
                 weightLbs: kgToLbs(fetchedProfile.weight || 0).toString(),
@@ -71,7 +69,6 @@ function Profile() {
         if (profile) {
             const { feet, inches } = cmToFeetInches(profile.height || 0);
             setEditedProfile({
-                email: profile.email || '',
                 heightFeet: feet.toString(),
                 heightInches: inches.toString(),
                 weightLbs: kgToLbs(profile.weight || 0).toString(),
@@ -96,7 +93,6 @@ function Profile() {
             const weightKg = lbsToKg(parseInt(editedProfile.weightLbs) || 0);
 
             const updatedProfile = {
-                email: editedProfile.email,
                 height: heightCm,
                 weight: weightKg,
                 fitnessGoal: editedProfile.fitnessGoal,
@@ -117,7 +113,6 @@ function Profile() {
                     weightLbs: kgToLbs(updatedData.weight || 0),
                 });
                 setEditedProfile({
-                    email: updatedData.email,
                     heightFeet: feet.toString(),
                     heightInches: inches.toString(),
                     weightLbs: kgToLbs(updatedData.weight || 0).toString(),
@@ -159,19 +154,11 @@ const ProfileCard = ({ profile, isEditing, editedProfile, handleChange, handleSu
             <img src={profile.avatar || 'https://via.placeholder.com/150'} alt="Profile" className="profile-avatar" />
             <h2>{profile.username}</h2>
         </div>
+        <div className="profile-email">
+            <strong>Email:</strong> {profile.email}
+        </div>
         {isEditing ? (
             <form onSubmit={handleSubmit} className="profile-form">
-                <div className="form-group">
-                    <label htmlFor="email">Email:</label>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        name="email" 
-                        value={editedProfile.email} 
-                        onChange={handleChange} 
-                        required 
-                    />
-                </div>
                 <div className="form-group">
                     <label htmlFor="heightFeet">Height:</label>
                     <div className="height-inputs">
@@ -228,7 +215,6 @@ const ProfileCard = ({ profile, isEditing, editedProfile, handleChange, handleSu
             </form>
         ) : (
             <div className="profile-details">
-                <p><strong>Email:</strong> {profile.email}</p>
                 <p><strong>Height:</strong> {profile.heightFeet} ft {profile.heightInches} in</p>
                 <p><strong>Weight:</strong> {profile.weightLbs} lbs</p>
                 <p><strong>Fitness Goal:</strong> {profile.fitnessGoal}</p>
