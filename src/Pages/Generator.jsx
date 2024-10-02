@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Generator.css';
 
 export default function Generator() {
@@ -10,6 +12,7 @@ export default function Generator() {
     ]);
     const [loading, setLoading] = useState(false);
     const [generatedRoutine, setGeneratedRoutine] = useState(null);
+
 
     const handleChange = (e) => {
         setInput(e.target.value);
@@ -113,11 +116,11 @@ export default function Generator() {
             const response = await axios.post('http://localhost:3000/api/routines', routine, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
-            alert("AI-generated workout routine has been saved successfully!");
+            toast.success("AI-generated workout routine has been saved successfully!");
             return response.data;
         } catch (error) {
             console.error('Error saving AI-generated routine:', error);
-            alert("Failed to save AI-generated workout routine.");
+            toast.error("Failed to save AI-generated workout routine.");
             return null;
         }
     };
@@ -194,12 +197,26 @@ export default function Generator() {
     const handleSaveRoutine = async () => {
         if (generatedRoutine) {
             await saveRoutineToBackend(generatedRoutine);
-            setGeneratedRoutine(null); 
+            setGeneratedRoutine(null);
+        } else {
+            toast.warn("No routine to save. Generate a routine first!");
         }
     };
 
     return (
         <div className="generator-container">
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
             <ul className="chatbox">
                 {messages.map((message, index) => (
                     <li key={index} className={message.role === 'user' ? 'user-message' : 'ai-message'}>

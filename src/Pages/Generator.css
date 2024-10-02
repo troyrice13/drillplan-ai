@@ -208,3 +208,48 @@ body.dark-theme .save-routine-btn {
 body.dark-theme .save-routine-btn:hover {
   background-color: #d62839; 
 }
+
+
+/* Toastify custom styles */
+.Toastify__toast {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  border-radius: 8px;
+}
+
+.Toastify__toast--success {
+  background-color: #4CAF50;
+}
+
+.Toastify__toast--error {
+  background-color: #f44336;
+}
+
+.Toastify__toast--warn {
+  background-color: #ff9800;
+}
+
+/* Dark theme adjustments */
+body.dark-theme .Toastify__toast {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+body.dark-theme .Toastify__toast--success {
+  background-color: #388e3c;
+}
+
+body.dark-theme .Toastify__toast--error {
+  background-color: #d32f2f;
+}
+
+body.dark-theme .Toastify__toast--warn {
+  background-color: #f57c00;
+}
+
+body.dark-theme .Toastify__close-button {
+  color: var(--text-dark);
+}
+
+body.dark-theme .Toastify__progress-bar {
+  background-color: rgba(255, 255, 255, 0.7);
+}
