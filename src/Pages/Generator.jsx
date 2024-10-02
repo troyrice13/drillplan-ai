@@ -59,60 +59,54 @@ export default function Generator() {
     
             if (!line) return;
     
-            if (line.startsWith('- **') && line.endsWith('**') && routine.name === "") {
-                routine.name = line.replace(/[-*]/g, '').replace(/\*\*/g, '').trim();
+            // Check for routine name
+            if (line.startsWith('###')) {
+                routine.name = line.replace(/^###\s*/, '').replace(/\**/g, '').trim();
                 return;
             }
     
-
-            if (line.startsWith('- **') && line.endsWith('**')) {
+            // Check for exercise name
+            if (line.startsWith('- **')) {
+                if (currentExercise) {
+                    routine.exercises.push(currentExercise);
+                }
                 currentExercise = {
-                    name: line.replace(/[-*]/g, '').replace(/\*\*/g, '').trim(),
+                    name: line.replace(/^-\s*\*\*/, '').replace(/\*\*$/, '').trim(),
                     sets: 0,
-                    reps: 0,
-                    weight: 0
+                    reps: ''
                 };
-                routine.exercises.push(currentExercise);
                 return;
             }
     
-
-            const setsMatch = line.match(/Sets:\s*(\d+)/i);
-            const repsMatch = line.match(/Reps:\s*(\d+)/i);
-            const weightMatch = line.match(/Weight:\s*(\d+)/i);
-    
+            // Parse exercise details
             if (currentExercise) {
+                const setsMatch = line.match(/Sets:\s*(\d+)/i);
+                const repsMatch = line.match(/Reps:\s*(\d+)(-\d+)?/i);
+    
                 if (setsMatch) {
                     currentExercise.sets = parseInt(setsMatch[1]);
                 }
                 if (repsMatch) {
-                    currentExercise.reps = parseInt(repsMatch[1]);
-                }
-                if (weightMatch) {
-                    currentExercise.weight = parseInt(weightMatch[1]);
+                    currentExercise.reps = repsMatch[1] + (repsMatch[2] || '');
                 }
             }
         });
     
-
+        // Add the last exercise if it exists
+        if (currentExercise) {
+            routine.exercises.push(currentExercise);
+        }
+    
+        // Validate routine
         if (!routine.name || routine.exercises.length === 0) {
             console.error("Routine parsing failed: Missing routine name or exercises.");
             return null;
         }
- 
-        routine.exercises = routine.exercises.filter(exercise => {
-            if (!exercise.name || !exercise.sets || !exercise.reps) {
-                console.error("Incomplete exercise details:", exercise);
-                return false;
-            }
-            return true;
-        });
     
         console.log("Parsed Routine:", routine);
         return routine;
     };
     
-
 
     const saveRoutineToBackend = async (routine) => {
         try {
@@ -133,27 +127,28 @@ export default function Generator() {
         const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
         try {
             const structuredPrompt = `
-            You are a personal trainer assistant. Provide workout routines in a structured format, while being conversational and friendly. Here is an example format to follow for each exercise:
-
-            - **Routine Name**
-              - **Exercise Name**
-                - Sets: X
-                - Reps: Y
-                - Rest: Z seconds
-
+            You are a personal trainer assistant. Provide workout routines in a structured format, while being conversational and friendly. Here is an example format to follow:
+    
+            ### Workout Routine Name
+    
+            - **Exercise Name**
+              - Sets: X
+              - Reps: Y (or Y-Z for rep ranges)
+    
             Include any necessary context in your responses to keep the conversation engaging. If the user asks for details about an exercise, provide a brief description.
-
+    
             User request: "${userMessage}"
             `;
-
+    
             const response = await axios.post(
                 'https://api.openai.com/v1/chat/completions',
                 {
-                    model: "gpt-4o-mini",
+                    model: "gpt-4",
                     max_tokens: 3000,
-                    temperature: 1,
+                    temperature: 0.7,
                     messages: [
-                        { role: "system", content: structuredPrompt }
+                        { role: "system", content: structuredPrompt },
+                        { role: "user", content: userMessage }
                     ],
                 },
                 {
@@ -163,17 +158,16 @@ export default function Generator() {
                     }
                 }
             );
-
+    
             const aiText = response.data.choices[0].message.content;
             console.log("AI Response:", aiText); 
-
+    
             const formattedResponse = formatAIResponse(aiText);
-
             const generatedRoutine = formatAIResponseToRoutine(formattedResponse);
-
+    
             console.log("Generated Routine:", generatedRoutine);
             setGeneratedRoutine(generatedRoutine); 
-
+    
             return formattedResponse;
         } catch (error) {
             console.error("Error fetching AI response:", error);
@@ -232,10 +226,10 @@ export default function Generator() {
 
             {generatedRoutine && (
                 <div className="save-routine-container">
-                    <h3>Generated Routine:</h3>
+                    <h3>Generated Routine: {generatedRoutine.name}</h3>
                     <ul>
                         {generatedRoutine.exercises.map((exercise, index) => (
-                            <li key={index}>{exercise.name}: {exercise.sets} sets, {exercise.reps} reps, Rest: {exercise.rest}</li>
+                            <li key={index}>{exercise.name}: {exercise.sets} sets, {exercise.reps} reps</li>
                         ))}
                     </ul>
                     <button className="save-routine-btn" onClick={handleSaveRoutine}>Save Routine</button>

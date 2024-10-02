@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Routines.css';
-import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa'; // Using react-icons for better visual appearance
+import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 export default function Routines() {
     const [routines, setRoutines] = useState([]);
@@ -27,6 +28,7 @@ export default function Routines() {
         } catch (error) {
             console.error('Error fetching routines:', error);
             setError('Error fetching routines. Please try again later.');
+            toast.error('Failed to fetch routines. Please try again later.');
         } finally {
             setLoading(false);
         }
@@ -42,12 +44,15 @@ export default function Routines() {
                 setIsAddingRoutine(false);
                 setNewRoutine({ name: '', exercises: [] });
                 setError('');
+                toast.success('Routine added successfully!');
             } catch (error) {
                 console.error('Error creating routine:', error);
                 setError('Error creating routine. Please try again.');
+                toast.error('Failed to create routine. Please try again.');
             }
         } else {
             setError('Please provide a name and at least one exercise for the routine.');
+            toast.warn('Please provide a name and at least one exercise for the routine.');
         }
     };
 
@@ -60,12 +65,15 @@ export default function Routines() {
                 setRoutines(routines.map(r => r._id === editingRoutine._id ? response.data : r));
                 setEditingRoutine(null);
                 setError('');
+                toast.success('Routine updated successfully!');
             } catch (error) {
                 console.error('Error updating routine:', error);
                 setError('Error updating routine. Please try again.');
+                toast.error('Failed to update routine. Please try again.');
             }
         } else {
             setError('Please provide a name and at least one exercise for the routine.');
+            toast.warn('Please provide a name and at least one exercise for the routine.');
         }
     };    
 
@@ -76,9 +84,11 @@ export default function Routines() {
             });
             setRoutines(routines.filter(r => r._id !== routineId));
             setError('');
+            toast.success('Routine deleted successfully!');
         } catch (error) {
             console.error('Error deleting routine:', error);
             setError('Error deleting routine. Please try again.');
+            toast.error('Failed to delete routine. Please try again.');
         }
     };
 
@@ -90,8 +100,10 @@ export default function Routines() {
             }));
             setNewExercise({ name: '', sets: '', reps: '' });
             setError('');
+            toast.success('Exercise added to routine!');
         } else {
             setError('Please fill in all exercise fields.');
+            toast.warn('Please fill in all exercise fields.');
         }
     };
 
@@ -100,6 +112,7 @@ export default function Routines() {
             ...prev,
             exercises: prev.exercises.filter((_, i) => i !== index)
         }));
+        toast.info('Exercise removed from routine.');
     };
 
     return (
