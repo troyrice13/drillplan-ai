@@ -1,7 +1,7 @@
 // Profile.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import ProfileCard from '../components/ProfileCard'; // Import the ProfileCard component
+import ProfileCard from '../components/ProfileCard';
 import './Profile.css';
 
 // Conversion functions

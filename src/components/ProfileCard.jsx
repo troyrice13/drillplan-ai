@@ -1,6 +1,6 @@
 // ProfileCard.js
 import React from 'react';
-import './Profile.css';
+import '../Pages/Profile.css';
 
 const ProfileCard = ({ profile, isEditing, editedProfile, handleChange, handleSubmit, handleCancel, handleEdit }) => (
     <div className="profile-card">
