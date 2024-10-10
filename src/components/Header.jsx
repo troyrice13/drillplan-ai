@@ -11,20 +11,18 @@ export default function Header() {
     const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
 
     const handleLogout = () => {
-        setIsLogoutConfirmOpen(false); // Close the modal before logging out
+        setIsLogoutConfirmOpen(false);
         logout();
         navigate('/');
     }
 
     useEffect(() => {
-        // Set theme based on local storage or default to light theme
         const currentTheme = localStorage.getItem('theme') || 'light';
         setIsDarkTheme(currentTheme === 'dark');
         document.body.classList.toggle('dark-theme', currentTheme === 'dark');
     }, []);
 
     useEffect(() => {
-        // Ensure dropdown and modal are closed when the login state changes
         setIsDropdownOpen(false);
         setIsLogoutConfirmOpen(false);
     }, [isLoggedIn]);
@@ -41,7 +39,7 @@ export default function Header() {
     };
 
     const openLogoutConfirm = () => {
-        setIsDropdownOpen(false); // Close dropdown before opening modal
+        setIsDropdownOpen(false);
         setIsLogoutConfirmOpen(true);
     };
 
@@ -80,7 +78,6 @@ export default function Header() {
                 </button>
             </div>
 
-            {/* Logout Confirmation Modal */}
             {isLogoutConfirmOpen && (
                 <div className="logout-confirm-overlay">
                     <div className="logout-confirm-card">

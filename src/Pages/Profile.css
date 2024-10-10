@@ -1,4 +1,3 @@
-/* Profile Container */
 .profile-container {
   max-width: 800px;
   margin: 0 auto;
@@ -16,7 +15,6 @@ body.dark-theme .profile-container {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-/* Profile Card */
 .profile-card {
   background-color: var(--bg-light);
   border-radius: 8px;
@@ -31,7 +29,6 @@ body.dark-theme .profile-card {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-/* Profile Header */
 .profile-header {
   display: flex;
   align-items: center;
@@ -53,14 +50,12 @@ body.dark-theme .profile-card {
   color: var(--accent-color);
 }
 
-/* Profile Details */
 .profile-details p {
   font-size: 16px;
   line-height: 1.5;
   margin: 10px 0;
 }
 
-/* Form Styles */
 .profile-form .form-group {
   margin-bottom: 15px;
 }
@@ -94,7 +89,6 @@ body.dark-theme .profile-form select {
   border-color: var(--accent-color);
 }
 
-/* Height Inputs */
 .height-inputs {
   display: flex;
   align-items: center;
@@ -106,7 +100,6 @@ body.dark-theme .profile-form select {
   text-align: center;
 }
 
-/* Form Actions */
 .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -114,7 +107,6 @@ body.dark-theme .profile-form select {
   margin-top: 20px;
 }
 
-/* Buttons */
 .edit-btn, .save-btn, .cancel-btn {
   padding: 10px 15px;
   border: none;
@@ -162,7 +154,6 @@ body.dark-theme .cancel-btn:hover {
   background-color: #4a5a6a;
 }
 
-/* Fitness Stats */
 .fitness-stats {
   background-color: var(--bg-light);
   border-radius: 8px;
@@ -227,7 +218,6 @@ body.dark-theme .stat-label {
   color: #a0a0a0;
 }
 
-/* Error and Loading Messages */
 .error-message, .loading-message {
   text-align: center;
   font-weight: bold;

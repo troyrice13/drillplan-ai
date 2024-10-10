@@ -1,21 +1,17 @@
 :root {
-  /* Light Theme */
-  --text-light: #213547; /* Light mode text color */
-  --bg-light: #FFFFFF; /* Light mode background */
-  --button-bg-light: #E0E0E0; /* Light mode button background */
-  --button-hover-light: #D3D3D3; /* Light mode button hover */
+  --text-light: #213547; 
+  --bg-light: #FFFFFF; 
+  --button-bg-light: #E0E0E0; 
+  --button-hover-light: #D3D3D3; 
 
-  /* Dark Theme */
-  --text-dark: #FFFFFF; /* Dark mode text color */
-  --bg-dark: #213547; /* Dark mode background */
-  --button-bg-dark: #4A6678; /* Dark mode button background */
-  --button-hover-dark: #5B7D91; /* Dark mode button hover */
+  --text-dark: #FFFFFF; 
+  --bg-dark: #213547; 
+  --button-bg-dark: #4A6678; 
+  --button-hover-dark: #5B7D91;
 
-  /* Accent Colors */
-  --accent-color: #4A6678; /* Accent color for links and highlights */
+  --accent-color: #4A6678; 
 }
 
-/* Apply Theme Variables */
 body {
   color: var(--text-light);
   background-color: var(--bg-light);
@@ -30,7 +26,6 @@ body.dark-theme {
   background-color: var(--bg-dark);
 }
 
-/* Link Styles */
 a {
   color: var(--accent-color);
   text-decoration: none;
@@ -41,7 +36,6 @@ a:hover {
   opacity: 0.8;
 }
 
-/* Button Styles */
 button {
   background-color: var(--button-bg-light);
   color: var(--text-light);
@@ -58,7 +52,6 @@ button:hover {
   background-color: var(--button-hover-light);
 }
 
-/* Dark Theme Button Styles */
 body.dark-theme button {
   background-color: var(--button-bg-dark);
   color: var(--text-dark);

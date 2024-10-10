@@ -4,7 +4,6 @@ const authenticateToken = require('../middleware/auth');
 const { ObjectId } = require('mongodb');
 
 module.exports = function(database) {
-    // GET route (existing)
     router.get('/', authenticateToken, async (req, res) => {
         try {
             console.log('Attempting to find user with ID:', req.user.userId);
@@ -36,7 +35,6 @@ module.exports = function(database) {
         }
     });
 
-    // New PUT route for updating profile
     router.put('/', authenticateToken, async (req, res) => {
         try {
             const { email, height, weight, fitnessGoal } = req.body;

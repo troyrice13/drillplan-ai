@@ -8,7 +8,6 @@ dotenv.config();
 module.exports = function(database) {
     const router = express.Router();
 
-    // Registration Route
     router.post('/register', async (req, res) => {
         try {
             const { username, password, email } = req.body;
@@ -16,7 +15,6 @@ module.exports = function(database) {
             
             const users = database.collection('users');
             
-            // Check if user already exists
             const existingUser = await users.findOne({ $or: [{ username }, { email }] });
             if (existingUser) {
                 return res.status(400).json({ message: 'Username or email already exists' });
@@ -30,7 +28,6 @@ module.exports = function(database) {
         }
     });
 
-    // Login Route
     router.post('/login', async (req, res) => {
         try {
             const { username, password } = req.body;
@@ -46,7 +43,7 @@ module.exports = function(database) {
                 return res.status(400).json({ message: 'Invalid credentials' });
             }
             
-            const expiresIn = '7d'; // Set to 7 days, adjust as needed
+            const expiresIn = '7d';
             const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
                 expiresIn: expiresIn,
             });
@@ -54,7 +51,7 @@ module.exports = function(database) {
             res.json({ 
                 token, 
                 user: { username: user.username, email: user.email },
-                expiresIn: 7 * 24 * 60 * 60 * 1000 // milliseconds
+                expiresIn: 7 * 24 * 60 * 60 * 1000
             });
         } catch (err) {
             console.error('Login error:', err);

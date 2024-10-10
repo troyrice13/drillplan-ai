@@ -3,7 +3,6 @@ import axios from 'axios';
 import ProfileCard from '../components/ProfileCard';
 import './Profile.css';
 
-// Conversion functions
 const cmToFeetInches = (cm) => {
     const inches = cm / 2.54;
     const feet = Math.floor(inches / 12);

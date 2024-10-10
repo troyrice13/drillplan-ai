@@ -41,7 +41,6 @@ export default function Login() {
       try {
         const response = await axios.post('http://localhost:3000/api/auth/login', { username, password });
         if (response.status === 200) {
-          // Updated to include expiresIn from the response
           login(response.data.user, response.data.token, response.data.expiresIn);
           alert('Login successful!');
           navigate('/generator');

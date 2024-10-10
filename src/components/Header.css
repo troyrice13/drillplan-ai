@@ -1,4 +1,3 @@
-/* Header Styles */
 .header {
   display: flex;
   justify-content: space-between;
@@ -10,13 +9,11 @@
   transition: background-color 0.3s, color 0.3s;
 }
 
-/* Dark Theme for Header */
 body.dark-theme .header {
   background-color: var(--bg-dark);
   color: var(--text-dark);
 }
 
-/* Header Title */
 .header-title {
   font-size: 1.5rem;
   font-weight: bold;
@@ -27,13 +24,11 @@ body.dark-theme .header {
   cursor: pointer;
 }
 
-/* Navigation Buttons Container */
 .nav-buttons {
   display: flex;
   gap: 12px;
 }
 
-/* General Button Styles */
 .nav-buttons button {
   height: 36px;
   padding: 0 16px;
@@ -51,7 +46,6 @@ body.dark-theme .header {
   background-color: var(--button-hover-light);
 }
 
-/* Dark Theme for General Buttons */
 body.dark-theme .nav-buttons button {
   background-color: var(--button-bg-dark);
   color: var(--text-dark);
@@ -61,7 +55,6 @@ body.dark-theme .nav-buttons button:hover {
   background-color: var(--button-hover-dark);
 }
 
-/* Theme Toggle Button */
 .theme-toggle-btn {
   background-color: transparent !important;
   color: inherit !important;
@@ -72,7 +65,6 @@ body.dark-theme .nav-buttons button:hover {
   opacity: 0.8;
 }
 
-/* Dropdown Button */
 .dropbtn {
   background-color: var(--button-bg-light);
   color: var(--text-light);
@@ -83,13 +75,11 @@ body.dark-theme .nav-buttons button:hover {
   border-radius: 5px;
 }
 
-/* Dropdown Container */
 .dropdown {
   position: relative;
   display: inline-block;
 }
 
-/* Dropdown Content */
 .dropdown-content {
   display: none;
   position: absolute;
@@ -100,7 +90,6 @@ body.dark-theme .nav-buttons button:hover {
   border-radius: 5px;
 }
 
-/* Dropdown Items */
 .dropdown-content .dropdown-item {
   background-color: var(--bg-light);
   color: var(--text-light);
@@ -117,24 +106,21 @@ body.dark-theme .nav-buttons button:hover {
   background-color: var(--button-hover-light);
 }
 
-/* Logout Button in Dropdown */
 .logout-item {
-  background-color: #ff6b6b; /* Light theme logout color */
+  background-color: #ff6b6b; 
   color: #fff;
 }
 
 .logout-item:hover {
-  background-color: #e63946; /* Darker red on hover */
+  background-color: #e63946; 
 }
 
-/* Dark Theme for Dropdown Button and Content */
 body.dark-theme .dropbtn,
 body.dark-theme .dropdown-content {
   background-color: var(--button-bg-dark);
   color: var(--text-dark);
 }
 
-/* Dark Theme for Dropdown Items */
 body.dark-theme .dropdown-item {
   background-color: var(--bg-dark);
   color: var(--text-dark);
@@ -144,36 +130,32 @@ body.dark-theme .dropdown-item:hover {
   background-color: var(--button-hover-dark);
 }
 
-/* Dark Theme for Logout Item */
 body.dark-theme .logout-item {
-  background-color: #e63946; /* Dark theme logout color */
+  background-color: #e63946; 
   color: #fff;
 }
 
 body.dark-theme .logout-item:hover {
-  background-color: #d62828; /* Darker red on hover */
+  background-color: #d62828; 
 }
 
-/* Show Dropdown Content When Open */
 .dropdown .dropdown-content {
   display: block;
 }
 
-/* Logout Confirmation Overlay */
 .logout-confirm-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.5); 
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Ensure it appears above all other content */
+  z-index: 1000; 
 }
 
-/* Logout Confirmation Card */
 .logout-confirm-card {
   background-color: var(--bg-light);
   padding: 20px;
@@ -194,7 +176,6 @@ body.dark-theme .logout-item:hover {
   color: var(--text-light);
 }
 
-/* Logout Confirmation Buttons */
 .logout-confirm-buttons {
   display: flex;
   justify-content: space-around;
@@ -210,17 +191,15 @@ body.dark-theme .logout-item:hover {
   transition: background-color 0.25s, color 0.25s;
 }
 
-/* Confirm Logout Button */
 .confirm-logout-btn {
-  background-color: #ff6b6b; /* Light theme logout color */
+  background-color: #ff6b6b; 
   color: #fff;
 }
 
 .confirm-logout-btn:hover {
-  background-color: #e63946; /* Darker red on hover */
+  background-color: #e63946; 
 }
 
-/* Cancel Logout Button */
 .cancel-logout-btn {
   background-color: var(--button-bg-light);
   color: var(--text-light);
@@ -230,7 +209,6 @@ body.dark-theme .logout-item:hover {
   background-color: var(--button-hover-light);
 }
 
-/* Dark Theme Adjustments */
 body.dark-theme .logout-confirm-card {
   background-color: var(--bg-dark);
 }

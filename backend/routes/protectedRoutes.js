@@ -4,7 +4,6 @@ const authenticateToken = require('../middleware/auth');
 module.exports = function(database) {
     const router = express.Router();
 
-    // Protected route for user profile
     router.get('/profile', authenticateToken, async (req, res) => {
         try {
             const users = database.collection('users');
@@ -14,7 +13,6 @@ module.exports = function(database) {
                 return res.status(404).json({ message: 'User not found' });
             }
 
-            // Exclude sensitive information like password
             const { password, ...userProfile } = user;
             res.json(userProfile);
         } catch (error) {
@@ -23,7 +21,6 @@ module.exports = function(database) {
         }
     });
 
-    // Protected route for user's routines
     router.get('/routines', authenticateToken, async (req, res) => {
         try {
             const routines = database.collection('routines');
@@ -35,7 +32,6 @@ module.exports = function(database) {
         }
     });
 
-    // Add a new routine (protected)
     router.post('/routines', authenticateToken, async (req, res) => {
         try {
             const { name, exercises } = req.body;
@@ -52,8 +48,6 @@ module.exports = function(database) {
             res.status(500).json({ message: 'Server error', error: error.message });
         }
     });
-
-    // You can add more protected routes here as needed
 
     return router;
 };

@@ -62,13 +62,11 @@ export default function Generator() {
     
             if (!line) return;
     
-            // Check for routine name
             if (line.startsWith('###')) {
                 routine.name = line.replace(/^###\s*/, '').replace(/\**/g, '').trim();
                 return;
             }
     
-            // Check for exercise name
             if (line.startsWith('- **')) {
                 if (currentExercise) {
                     routine.exercises.push(currentExercise);
@@ -81,7 +79,6 @@ export default function Generator() {
                 return;
             }
     
-            // Parse exercise details
             if (currentExercise) {
                 const setsMatch = line.match(/Sets:\s*(\d+)/i);
                 const repsMatch = line.match(/Reps:\s*(\d+)(-\d+)?/i);
@@ -95,12 +92,10 @@ export default function Generator() {
             }
         });
     
-        // Add the last exercise if it exists
         if (currentExercise) {
             routine.exercises.push(currentExercise);
         }
     
-        // Validate routine
         if (!routine.name || routine.exercises.length === 0) {
             console.error("Routine parsing failed: Missing routine name or exercises.");
             return null;

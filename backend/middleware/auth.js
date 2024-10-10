@@ -7,7 +7,6 @@ const authenticateToken = (req, res, next) => {
     try {
         const verified = jwt.verify(token, process.env.JWT_SECRET);
         
-        // Check if token has expired
         const currentTimestamp = Math.floor(Date.now() / 1000);
         if (verified.exp && verified.exp < currentTimestamp) {
             return res.status(401).json({ message: 'Token has expired' });

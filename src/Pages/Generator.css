@@ -209,8 +209,6 @@ body.dark-theme .save-routine-btn:hover {
   background-color: #d62839; 
 }
 
-
-/* Toastify custom styles */
 .Toastify__toast {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   border-radius: 8px;
@@ -228,7 +226,6 @@ body.dark-theme .save-routine-btn:hover {
   background-color: #ff9800;
 }
 
-/* Dark theme adjustments */
 body.dark-theme .Toastify__toast {
   background-color: var(--bg-dark);
   color: var(--text-dark);

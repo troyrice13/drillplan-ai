@@ -31,12 +31,10 @@ async function startServer() {
 
     const database = client.db("DrillPlan");
 
-    // Import routes
     const authRoutes = require('./routes/auth');
     const profileRoutes = require('./routes/profile');
     const routineRoutes = require('./routes/routines');
 
-    // Use routes
     app.use('/api/auth', authRoutes(database));
     app.use('/api/profile', profileRoutes(database));
     app.use('/api/routines', routineRoutes(database));
@@ -55,13 +53,11 @@ async function startServer() {
       }
     });
 
-    // Global error handler
     app.use((err, req, res, next) => {
       console.error(err.stack);
       res.status(500).send('Something broke!');
     });
 
-    // Start the server
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
     });
@@ -74,7 +70,6 @@ async function startServer() {
 
 startServer().catch(console.dir);
 
-// Handle server shutdown
 process.on('SIGINT', async () => {
   try {
     await client.close();
@@ -86,8 +81,6 @@ process.on('SIGINT', async () => {
   }
 });
 
-// Handle unhandled promise rejections
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-  // Application specific logging, throwing an error, or other logic here
 });

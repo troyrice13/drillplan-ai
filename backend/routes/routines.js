@@ -5,7 +5,6 @@ const authenticateToken = require('../middleware/auth');
 
 module.exports = function(database) {
 
-    // Create a new routine
     router.post('/', authenticateToken, async (req, res) => {
         try {
             const { name, exercises } = req.body;
@@ -26,7 +25,6 @@ module.exports = function(database) {
     });
     
 
-    // Get all routines for a user
     router.get('/', authenticateToken, async (req, res) => {
         try {
             const routines = await database.collection('routines')
@@ -39,18 +37,15 @@ module.exports = function(database) {
         }
     });
 
-    // Update a routine
     router.put('/:routineId', authenticateToken, async (req, res) => {
         try {
             const routineId = new ObjectId(req.params.routineId);
             const userId = new ObjectId(req.user.userId);
     
-            // Log the incoming data for debugging
             console.log('Updating routine with ID:', routineId);
             console.log('Authenticated user ID:', userId);
             console.log('Update data received:', req.body);
     
-            // Check if the routine exists and belongs to the user
             const existingRoutine = await database.collection('routines').findOne({
                 _id: routineId,
                 userId: userId
@@ -84,10 +79,6 @@ module.exports = function(database) {
         }
     });
     
-    
-    
-
-    // Delete a routine
     router.delete('/:routineId', authenticateToken, async (req, res) => {
         try {
             const result = await database.collection('routines').deleteOne({
