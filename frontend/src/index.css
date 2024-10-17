@@ -1,0 +1,62 @@
+:root {
+  --text-light: #213547; 
+  --bg-light: #FFFFFF; 
+  --button-bg-light: #E0E0E0; 
+  --button-hover-light: #D3D3D3; 
+
+  --text-dark: #FFFFFF; 
+  --bg-dark: #213547; 
+  --button-bg-dark: #4A6678; 
+  --button-hover-dark: #5B7D91;
+
+  --accent-color: #4A6678; 
+}
+
+body {
+  color: var(--text-light);
+  background-color: var(--bg-light);
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  margin: 0;
+  transition: color 0.3s, background-color 0.3s;
+}
+
+body.dark-theme {
+  color: var(--text-dark);
+  background-color: var(--bg-dark);
+}
+
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: opacity 0.3s;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+button {
+  background-color: var(--button-bg-light);
+  color: var(--text-light);
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.25s, color 0.25s;
+}
+
+button:hover {
+  background-color: var(--button-hover-light);
+}
+
+body.dark-theme button {
+  background-color: var(--button-bg-dark);
+  color: var(--text-dark);
+}
+
+body.dark-theme button:hover {
+  background-color: var(--button-hover-dark);
+}
